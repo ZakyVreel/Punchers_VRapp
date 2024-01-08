@@ -20,9 +20,15 @@ namespace Kinect_TP
     /// </summary>
     public partial class MainWindow : Window
     {
+        KinectManager KinectManager = new KinectManager();
         public MainWindow()
         {
+            DataContext = KinectManager;
+
+            KinectManager.StartSensor();
+            
             InitializeComponent();
         }
+
     }
 }
