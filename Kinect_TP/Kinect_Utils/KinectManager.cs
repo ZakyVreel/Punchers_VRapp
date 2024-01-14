@@ -7,14 +7,14 @@ using System.Net.NetworkInformation;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Kinect_TP
 {
-    public class KinectManager : INotifyPropertyChanged
+    public class KinectManager : ObservableObject
     {
         public string? StatusText;
-
-
+        public KinectSensor kinectSensor = KinectSensor.GetDefault();
         public bool status;
 
         public bool Status
@@ -22,23 +22,10 @@ namespace Kinect_TP
             get { return status; }
             set
             {
-                if (status != value)
-                {
-                    status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
+                SetProperty(ref status, value);
             }
         }
 
-        public KinectSensor kinectSensor = KinectSensor.GetDefault();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public void StartSensor()
         {
