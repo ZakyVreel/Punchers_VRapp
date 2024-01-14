@@ -4,13 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kinect_TP"
+        xmlns:converters="clr-namespace:Kinect_TP.Converter"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"></RowDefinition>
             <RowDefinition Height="60"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -21,14 +26,17 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Ellipse x:Name="CercleStart" Width="40" Height="40" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="5"/>
-
-        <TextBlock Text="{Binding Status}"></TextBlock>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Ellipse x:Name="CercleStart" Width="40" Height="40" Fill="{Binding Status, Converter={StaticResource BoolToColorConverter}}"/>
+            <TextBlock Text="{Binding Status}" Margin="10,10,0,0" FontSize="16"/>
+        </StackPanel>
         
-        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}">Color</Button>
-        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource RoundedButtonStyle}">Depth</Button>
-        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource RoundedButtonStyle}">Infrared</Button>
-        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource RoundedButtonStyle}">Body</Button>
-        <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource RoundedButtonStyle}">Body and Color</Button>
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}" Margin="10">Color</Button>
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource RoundedButtonStyle}" Margin="10">Depth</Button>
+        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource RoundedButtonStyle}" Margin="10">Infrared</Button>
+        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource RoundedButtonStyle}" Margin="10">Body</Button>
+        <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource RoundedButtonStyle}" Margin="10">Body and Color</Button>
+
+        <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Margin="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>
