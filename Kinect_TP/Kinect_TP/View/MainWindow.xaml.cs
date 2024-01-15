@@ -35,5 +35,16 @@ namespace Kinect_TP.View
             InitializeComponent();
         }
 
+        private void WindowLoad(object sender, EventArgs e)
+        {
+            MainWindowVM.StartCommand.Execute(null);
+        }
+
+        private void WindowUnload(object sender, EventArgs e)
+        {
+            MainWindowVM.StopCommand.Execute(null);
+        }
+
+
     }
 }
