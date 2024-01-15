@@ -22,11 +22,11 @@ namespace Kinect_Utils
             Manager = manager;
         }
 
-        public void Start()
+        virtual public void Start()
         {
             Manager.StartSensor();
         }
-        public void Stop()
+        virtual public void Stop()
         {
             Manager.StopSensor();
         }
