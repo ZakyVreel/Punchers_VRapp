@@ -1,4 +1,5 @@
-﻿using Kinect_TP;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Kinect_TP;
 using Microsoft.Kinect;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace Kinect_Utils
 {
     // make it abstract for a better logic and not instantiate this class ?
-    public class KinectStream
+    public class KinectStream : ObservableObject
     {
         protected KinectSensor Sensor;
 

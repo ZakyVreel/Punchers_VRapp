@@ -21,12 +21,6 @@ namespace Kinect_TP.View
         public MainWindowVM MainWindowVM { get; set; }
 
 
-        //Methode qui fait partie de la classe Window, elle est appellé pour créer la fentre WPF.
-        public override void BeginInit()
-        {
-            base.BeginInit();
-            MainWindowVM.StartCommand.Execute(null);
-        }
 
         public MainWindow()
         {
@@ -35,14 +29,17 @@ namespace Kinect_TP.View
             InitializeComponent();
         }
 
+        //Methode que sera appelé lors que la page est chargé
         private void WindowLoad(object sender, EventArgs e)
         {
-            MainWindowVM.StartCommand.Execute(null);
+            MainWindowVM.StartKinectCommand.Execute(null);
+            MainWindowVM.StartColorImageStreamCommand.Execute(null);
         }
 
+        //Methode que sera appelé lors que la page est dechargé
         private void WindowUnload(object sender, EventArgs e)
         {
-            MainWindowVM.StopCommand.Execute(null);
+            MainWindowVM.StopKinectCommand.Execute(null);
         }
 
 

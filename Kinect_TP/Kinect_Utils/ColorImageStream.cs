@@ -5,13 +5,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Kinect_Utils
 {
     public class ColorImageStream : KinectStream, IDisposable
     {
         private WriteableBitmap bitmap = null;
+        public WriteableBitmap Bitmap
+        {
+            get { return bitmap; }
+            set
+            {
+                if (value != null)
+                {
+                    SetProperty(ref bitmap, value);
+                }
+            }
+        }
+
         private ColorFrameReader colorFrameReader = null;
 
 
@@ -41,7 +56,6 @@ namespace Kinect_Utils
 
         private void Reader_ColorFrameArrived(object sender, ColorFrameArrivedEventArgs e)
         {
-            bool colorFrameProcessed = false;
 
             // ColorFrame is IDisposable
             using (ColorFrame colorFrame = e.FrameReference.AcquireFrame())
@@ -57,27 +71,33 @@ namespace Kinect_Utils
                     if ((colorFrameDescription.Width == this.bitmap.PixelWidth) && (colorFrameDescription.Height == this.bitmap.PixelHeight))
                     {
                         // CopyConvertedFrameDataToArray is used to get color data
-                        colorFrame.CopyConvertedFrameDataToArray(colorData, ColorImageFormat.Bgra);
+                        //colorFrame.CopyConvertedFrameDataToArray(colorData, ColorImageFormat.Bgra);
+                        
+                        
+                        //colorFrame.CopyRawFrameDataToIntPtr(colorData, ColorImageFormat.Bgra);   ++++ IL FAUT UTILISER CELA
 
-                        // If needed, you can process the colorData array here
 
-                        // Example: Apply the color data to a WriteableBitmap
-                        this.bitmap.WritePixels(
-                            new Int32Rect(0, 0, colorFrameDescription.Width, colorFrameDescription.Height),
-                            colorData,
-                             (int)(colorFrameDescription.Width * colorFrameDescription.BytesPerPixel),
-    0);
+                        this.bitmap.Lock();
 
-                        colorFrameProcessed = true;
+                        try
+                        {
+                            this.bitmap.WritePixels(
+                                new Int32Rect(0, 0, colorFrameDescription.Width, colorFrameDescription.Height),
+                                colorData,
+                                (int)(colorFrameDescription.Width * colorFrameDescription.BytesPerPixel * colorFrameDescription.Height),
+                                0);
+                        }
+                        finally
+                        {
+                            this.bitmap.AddDirtyRect(new Int32Rect(0, 0, this.bitmap.PixelWidth, this.bitmap.PixelHeight));
+                            this.bitmap.Unlock();
+                        }
+
                     }
                 }
             }
 
-            // We got a frame, render
-            if (colorFrameProcessed)
-            {
-                //this.bitmap.InvalidateProperty();
-            }
+
         }
 
 

@@ -7,20 +7,26 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Kinect_Utils;
 
 namespace Kinect_TP.ViewModel
 { 
     public class MainWindowVM
     {
-        public ICommand StartCommand { get; set; }
-        public ICommand StopCommand { get; set; }
+
+        public ICommand StartKinectCommand { get; set; }
+        public ICommand StopKinectCommand { get; set; }
+        public ICommand StartColorImageStreamCommand {  get; set; }
         public KinectManager KinectManager { get; set; }
+        public ColorImageStream ColorImageStream { get; set; }
 
         public MainWindowVM()
         {
             KinectManager = new KinectManager();
-            StartCommand = new RelayCommand(Start);
-            StopCommand = new RelayCommand(Stop);
+            ColorImageStream = new ColorImageStream(KinectManager);
+            StartKinectCommand = new RelayCommand(Start);
+            StopKinectCommand = new RelayCommand(Stop);
+            StartColorImageStreamCommand = new RelayCommand(StartColorImageStream);
         }
 
         private void Start()
@@ -31,6 +37,11 @@ namespace Kinect_TP.ViewModel
         private void Stop()
         {
             KinectManager.StopSensor();
+        }
+
+        private void StartColorImageStream()
+        {
+            ColorImageStream.Start();
         }
 
     }
