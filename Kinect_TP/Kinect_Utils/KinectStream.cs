@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Kinect_Utils
 {
-    // make it abstract for a better logic and not instantiate this class ?
-    public class KinectStream : ObservableObject
+    // Classe abstract pour les kinect streams
+    public abstract class KinectStream : ObservableObject
     {
-        protected KinectSensor Sensor;
+        protected KinectSensor Sensor { get; set; }
 
-        protected KinectManager Manager;
+        protected KinectManager Manager { get; set; }
 
         public KinectStream(KinectManager manager)
         {

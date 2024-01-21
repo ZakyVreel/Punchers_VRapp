@@ -13,22 +13,34 @@ namespace Kinect_TP.ViewModel
 { 
     public class MainWindowVM
     {
-
+        /// <summary>
+        /// Propriété liée à la commande appelée au démarrage de la page principale
+        /// </summary>
         public ICommand StartKinectCommand { get; set; }
         public ICommand StopKinectCommand { get; set; }
         public ICommand StartColorImageStreamCommand {  get; set; }
         public KinectManager KinectManager { get; set; }
-        public ColorImageStream ColorImageStream { get; set; }
+
+        public KinectStreamsFactory KinectStreamsFactory { get; set; }
+        public KinectStream KinectStream { get; set; }
+
 
         public MainWindowVM()
         {
             KinectManager = new KinectManager();
-            ColorImageStream = new ColorImageStream(KinectManager);
+
+            KinectStreamsFactory = new KinectStreamsFactory(new KinectManager());
+
+            KinectStream = KinectStreamsFactory[KinectStreams.Color];
+
             StartKinectCommand = new RelayCommand(Start);
             StopKinectCommand = new RelayCommand(Stop);
             StartColorImageStreamCommand = new RelayCommand(StartColorImageStream);
         }
 
+        /// <summary>
+        /// Méthode inicié au lancement de la main window pour savoir si le Kinect est disponible ou non
+        /// </summary>
         private void Start()
         {
             KinectManager.StartSensor();
@@ -41,7 +53,7 @@ namespace Kinect_TP.ViewModel
 
         private void StartColorImageStream()
         {
-            ColorImageStream.Start();
+            KinectStream.Start();
         }
 
     }
