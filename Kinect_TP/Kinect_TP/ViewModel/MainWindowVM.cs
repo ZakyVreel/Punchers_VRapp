@@ -46,7 +46,7 @@ namespace Kinect_TP.ViewModel
 
             KinectStreamsFactory = new KinectStreamsFactory(KinectManager);
 
-           KinectStream = KinectStreamsFactory[KinectStreams.Body];
+            KinectStream = KinectStreamsFactory[KinectStreams.Color];
             KinectStream.Start();
 
             StartKinectCommand = new RelayCommand(Start);
