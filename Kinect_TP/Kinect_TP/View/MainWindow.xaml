@@ -32,7 +32,8 @@
             <Ellipse x:Name="CercleStart" Width="40" Height="40" Fill="{Binding KinectManager.Status, Converter={StaticResource BoolToColorConverter}}"/>
             <TextBlock Text="{Binding KinectManager.StatusText}" Margin="10,10,0,0" FontSize="16"/>
         </StackPanel>
-        
+
+        <!--<Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}" Command="{Binding StartColorImageStreamCommand}" Margin="10">Color</Button>-->
         <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}" Margin="10">Color</Button>
         <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource RoundedButtonStyle}" Margin="10">Depth</Button>
         <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource RoundedButtonStyle}" Margin="10">Infrared</Button>
@@ -40,7 +41,7 @@
         <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource RoundedButtonStyle}" Margin="10">Body and Color</Button>
 
         <Viewbox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Image  Source="{Binding ColorImageStream.Bitmap}" Stretch="UniformToFill" />
+            <Image Source="{Binding KinectStream.ImageSource}" Stretch="UniformToFill" />
         </Viewbox>
 
     </Grid>

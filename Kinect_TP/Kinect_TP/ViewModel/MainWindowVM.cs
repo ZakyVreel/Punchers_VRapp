@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Kinect_Utils;
 
 namespace Kinect_TP.ViewModel
 { 
-    public class MainWindowVM
+    public class MainWindowVM : ObservableObject
     {
         /// <summary>
         /// Propriété liée à la commande appelée au démarrage de la page principale
@@ -22,16 +25,29 @@ namespace Kinect_TP.ViewModel
         public KinectManager KinectManager { get; set; }
 
         public KinectStreamsFactory KinectStreamsFactory { get; set; }
-        public KinectStream KinectStream { get; set; }
+
+        public KinectStream kinectStream;
+        public KinectStream KinectStream {
+            get { return kinectStream; }
+            set
+            {
+                if (value != null)
+                {
+                    SetProperty(ref kinectStream, value);
+                }
+            }
+        }
 
 
         public MainWindowVM()
         {
             KinectManager = new KinectManager();
+            KinectManager.StartSensor();
 
-            KinectStreamsFactory = new KinectStreamsFactory(new KinectManager());
+            KinectStreamsFactory = new KinectStreamsFactory(KinectManager);
 
-            KinectStream = KinectStreamsFactory[KinectStreams.Color];
+           KinectStream = KinectStreamsFactory[KinectStreams.Body];
+            KinectStream.Start();
 
             StartKinectCommand = new RelayCommand(Start);
             StopKinectCommand = new RelayCommand(Stop);
@@ -41,18 +57,19 @@ namespace Kinect_TP.ViewModel
         /// <summary>
         /// Méthode inicié au lancement de la main window pour savoir si le Kinect est disponible ou non
         /// </summary>
-        private void Start()
+        public void Start()
         {
             KinectManager.StartSensor();
         }
 
-        private void Stop()
+        public void Stop()
         {
             KinectManager.StopSensor();
         }
 
-        private void StartColorImageStream()
+        public void StartColorImageStream()
         {
+            KinectStream = KinectStreamsFactory[KinectStreams.Color];
             KinectStream.Start();
         }
 

@@ -32,7 +32,8 @@ namespace Kinect_Utils
                 { KinectStreams.None, () => null }, // Aucun flux
                 { KinectStreams.Color, () => new ColorImageStream(kinectManager) },
                 { KinectStreams.Depth, () => new DepthImageStream(kinectManager) },
-                { KinectStreams.IR, () => new InfraredImageStream(kinectManager) }
+                { KinectStreams.IR, () => new InfraredImageStream(kinectManager) },
+                { KinectStreams.Body, () => new BodyStream(kinectManager) }
             };
 
         }

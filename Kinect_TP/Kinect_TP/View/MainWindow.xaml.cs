@@ -32,8 +32,7 @@ namespace Kinect_TP.View
         //Methode que sera appelé lors que la page est chargé
         private void WindowLoad(object sender, EventArgs e)
         {
-            MainWindowVM.StartKinectCommand.Execute(null);
-            MainWindowVM.StartColorImageStreamCommand.Execute(null);
+           // MainWindowVM.StartColorImageStreamCommand.Execute(null);
         }
 
         //Methode que sera appelé lors que la page est dechargé

@@ -32,6 +32,8 @@ namespace Kinect_Utils
             }
         }
 
+        public ImageSource ImageSource { get { return this.bitmap; } }
+
         //ColorFrameReader va lire les trames de couleurs arrivent du kinect
         private ColorFrameReader colorFrameReader = null;
 
@@ -53,11 +55,11 @@ namespace Kinect_Utils
         /// </summary>
         override public void Start()
         {
-            FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
-            this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
-
             // Ouvre le lecteur pour les frames de couleurs
             this.colorFrameReader = this.Sensor.ColorFrameSource.OpenReader();
+            //Faut commenter ici ++++
+            FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
+            this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
 
             // S'abonne à l'événement
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
@@ -90,8 +92,6 @@ namespace Kinect_Utils
         private void Reader_ColorFrameArrived(object sender, ColorFrameArrivedEventArgs e)
         {
 
-            // Faut-il verrouiller au début?
-
             // ColorFrame est IDisposable
             using (ColorFrame colorFrame = e.FrameReference.AcquireFrame())
             {
@@ -99,47 +99,22 @@ namespace Kinect_Utils
                 {
                     FrameDescription colorFrameDescription = colorFrame.FrameDescription;
 
-                    // Crée un tableau pour stocker les données de couleur
-                    // Width * Height = total de pixels dans l'image
-                    // BitsPerPixel = rapport bits/pixel
-                    byte[] colorData = new byte[colorFrameDescription.Width * colorFrameDescription.Height * colorFrameDescription.BytesPerPixel];
-
-                    // Vérifie les données et copie les nouvelles données de trame couleur dans le tableau
-                    if ((colorFrameDescription.Width == this.bitmap.PixelWidth) && (colorFrameDescription.Height == this.bitmap.PixelHeight))
+                    using (KinectBuffer colorBuffer = colorFrame.LockRawImageBuffer())
                     {
-                        // CopyConvertedFrameDataToArray est utilisé pour obtenir les données de couleur
-                        //colorFrame.CopyConvertedFrameDataToArray(colorData, ColorImageFormat.Bgra);
-
-                        //colorFrame.CopyRawFrameDataToIntPtr(colorData, ColorImageFormat.Bgra);  Si ça marche pas, on va utiliser cela
-
-                       
-                        if (colorFrame.RawColorImageFormat == ColorImageFormat.Bgra)
-                        {
-                            colorFrame.CopyRawFrameDataToArray(colorData);
-                        }
-                        else
-                        {
-                            colorFrame.CopyConvertedFrameDataToArray(colorData, ColorImageFormat.Bgra);
-                        }
-
                         this.bitmap.Lock();
 
-                        // Écrit les données de couleur dans le bitmap
-                        // Int32Rect : zone à l'intérieur du bitmap à mettre à jour => dans ce cas, tout
-                        try
+                        // verify data and write the new color frame data to the display bitmap
+                        if ((colorFrameDescription.Width == this.bitmap.PixelWidth) && (colorFrameDescription.Height == this.bitmap.PixelHeight))
                         {
-                            this.bitmap.WritePixels(
-                                new Int32Rect(0, 0, colorFrameDescription.Width, colorFrameDescription.Height),
-                                colorData,
-                                (int)(colorFrameDescription.Width * colorFrameDescription.BytesPerPixel * colorFrameDescription.Height),
-                                0);
-                        }
-                        finally
-                        {
+                            colorFrame.CopyConvertedFrameDataToIntPtr(
+                                this.bitmap.BackBuffer,
+                                (uint)(colorFrameDescription.Width * colorFrameDescription.Height * 4),
+                                ColorImageFormat.Bgra);
+
                             this.bitmap.AddDirtyRect(new Int32Rect(0, 0, this.bitmap.PixelWidth, this.bitmap.PixelHeight));
-                            this.bitmap.Unlock();
                         }
 
+                        this.bitmap.Unlock();
                     }
                 }
             }

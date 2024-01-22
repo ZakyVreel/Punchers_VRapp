@@ -11,6 +11,7 @@ namespace Kinect_Utils
         None,
         Color,
         Depth,
-        IR
+        IR,
+        Body
     }
 }
