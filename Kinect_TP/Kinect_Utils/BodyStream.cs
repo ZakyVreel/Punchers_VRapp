@@ -8,6 +8,9 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
+    /// <summary>
+    /// Classe qui represente le flux d'image du corps pour la Kinect.
+    /// </summary>
     public class BodyStream : KinectStream
     {
         private const double HandSize = 30;
@@ -22,22 +25,23 @@
         private readonly Brush inferredJointBrush = Brushes.Yellow;
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
 
-        private DrawingGroup drawingGroup;
+        private DrawingGroup drawingGroup = new DrawingGroup();
         private Body[] bodies;
         private List<Tuple<JointType, JointType>> bones;
         private int displayWidth;
         private int displayHeight;
         private List<Pen> bodyColors;
 
+        private DrawingImage imageSource = new DrawingImage();
         private KinectSensor kinectSensor;
         private CoordinateMapper coordinateMapper;
         private BodyFrameReader bodyFrameReader;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImageSource ImageSource
+        public override ImageSource ImageSource
         {
-            get { return new DrawingImage(this.drawingGroup); }
+            get { return this.imageSource; }
         }
 
         public string StatusText { get; private set; }
@@ -48,6 +52,10 @@
             this.InitializeKinect();
             this.InitializeDrawingObjects();
         }
+
+        /// <summary>
+        /// Démarre la lecture du flux de corps.
+        /// </summary>
         override public void Start()
         {
             this.StartProcessing();
@@ -112,6 +120,8 @@
             this.bodyColors.Add(new Pen(Brushes.Blue, 6));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
+
+            this.imageSource = new DrawingImage(this.drawingGroup);
         }
 
         private void InitializeDrawingObjects()

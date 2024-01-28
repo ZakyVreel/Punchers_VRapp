@@ -32,10 +32,16 @@ namespace Kinect_Utils
             }
         }
 
-        public ImageSource ImageSource { get { return this.bitmap; } }
+        /// <summary>
+        /// Obtient la source d'image de la classe.
+        /// </summary>
+        public override ImageSource ImageSource
+        {
+            get { return this.bitmap; }
+        }
 
         //ColorFrameReader va lire les trames de couleurs arrivent du kinect
-        private ColorFrameReader colorFrameReader = null;
+        private ColorFrameReader colorFrameReader;
 
 
         /// <summary>
@@ -43,6 +49,8 @@ namespace Kinect_Utils
         /// </summary>
         public ColorImageStream(KinectManager kinectSensor) : base(kinectSensor)
         {
+            FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
+            this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
         }
 
         public void Dispose()
@@ -57,14 +65,12 @@ namespace Kinect_Utils
         {
             // Ouvre le lecteur pour les frames de couleurs
             this.colorFrameReader = this.Sensor.ColorFrameSource.OpenReader();
-            //Faut commenter ici ++++
-            FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
-            this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
+            
+            if (this.colorFrameReader != null) {
+                // S'abonne à l'événement
+                this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
+            }
 
-            // S'abonne à l'événement
-            this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
-
-            //base.Start(); Cela, on est d'accord, va simplement lancer la kinect?
         }
 
         /// <summary>

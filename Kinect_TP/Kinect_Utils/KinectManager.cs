@@ -50,8 +50,8 @@ namespace Kinect_TP
         /// </summary>
         public void StartSensor()
         {
-            this.kinectSensor.IsAvailableChanged += KinectSensor_IsAvailableChanged;
             this.kinectSensor.Open();
+            this.kinectSensor.IsAvailableChanged += KinectSensor_IsAvailableChanged;
         }
 
         /// <summary>
@@ -59,6 +59,7 @@ namespace Kinect_TP
         /// </summary>
         public void StopSensor()
         {
+            this.kinectSensor.IsAvailableChanged -= this.KinectSensor_IsAvailableChanged;
             this.kinectSensor.Close();
         }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Kinect_Utils
 {
@@ -16,6 +17,8 @@ namespace Kinect_Utils
         protected KinectSensor Sensor { get; set; }
 
         protected KinectManager Manager { get; set; }
+
+        public abstract ImageSource ImageSource { get; }
 
         public KinectStream(KinectManager manager)
         {

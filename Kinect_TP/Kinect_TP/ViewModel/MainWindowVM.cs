@@ -19,11 +19,15 @@ namespace Kinect_TP.ViewModel
         /// <summary>
         /// Propriété liée à la commande appelée au démarrage de la page principale
         /// </summary>
+      
         public ICommand StartKinectCommand { get; set; }
         public ICommand StopKinectCommand { get; set; }
-        public ICommand StartColorImageStreamCommand {  get; set; }
+        public ICommand ColorImageStreamCommand {  get; set; }
         public KinectManager KinectManager { get; set; }
 
+        /// <summary>
+        /// Le Kinect streams factory pour la creation des streams.
+        /// </summary>
         public KinectStreamsFactory KinectStreamsFactory { get; set; }
 
         public KinectStream kinectStream;
@@ -42,34 +46,66 @@ namespace Kinect_TP.ViewModel
         public MainWindowVM()
         {
             KinectManager = new KinectManager();
-            KinectManager.StartSensor();
 
+            //Factory
             KinectStreamsFactory = new KinectStreamsFactory(KinectManager);
-
-            KinectStream = KinectStreamsFactory[KinectStreams.Color];
-            KinectStream.Start();
 
             StartKinectCommand = new RelayCommand(Start);
             StopKinectCommand = new RelayCommand(Stop);
-            StartColorImageStreamCommand = new RelayCommand(StartColorImageStream);
+
+            ColorImageStreamCommand = new RelayCommand(ColorImageStream);
         }
 
         /// <summary>
-        /// Méthode inicié au lancement de la main window pour savoir si le Kinect est disponible ou non
+        /// Méthode qui va lancer le kinect, sert à savoir si le Kinect est disponible ou non
         /// </summary>
-        public void Start()
+        private void Start()
         {
             KinectManager.StartSensor();
         }
 
-        public void Stop()
+        private void Stop()
         {
             KinectManager.StopSensor();
         }
 
-        public void StartColorImageStream()
+        private void ColorImageStream()
         {
+            if (KinectStream != null)
+            {
+                KinectStream.Stop();
+            }
             KinectStream = KinectStreamsFactory[KinectStreams.Color];
+            KinectStream.Start();
+        }
+
+        private void BodyImageStream()
+        {
+            if (KinectStream != null)
+            {
+                KinectStream.Stop();
+            }
+            KinectStream = KinectStreamsFactory[KinectStreams.Body];
+            KinectStream.Start();
+        }
+
+        private void IRImageStream()
+        {
+            if (KinectStream != null)
+            {
+                KinectStream.Stop();
+            }
+            KinectStream = KinectStreamsFactory[KinectStreams.IR];
+            KinectStream.Start();
+        }
+
+        private void DepthImageStream()
+        {
+            if (KinectStream != null)
+            {
+                KinectStream.Stop();
+            }
+            KinectStream = KinectStreamsFactory[KinectStreams.Depth];
             KinectStream.Start();
         }
 
