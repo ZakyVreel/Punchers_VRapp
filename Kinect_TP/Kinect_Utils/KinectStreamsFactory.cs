@@ -1,4 +1,5 @@
 ﻿using Kinect_TP;
+using KinectConnection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

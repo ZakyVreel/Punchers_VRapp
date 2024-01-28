@@ -23,6 +23,9 @@ namespace Kinect_TP.ViewModel
         public ICommand StartKinectCommand { get; set; }
         public ICommand StopKinectCommand { get; set; }
         public ICommand ColorImageStreamCommand {  get; set; }
+        public ICommand BodyImageStreamCommand { get; set; }
+        public ICommand IRImageStreamCommand { get; set; }
+        public ICommand DepthImageStreamCommand { get; set; }
         public KinectManager KinectManager { get; set; }
 
         /// <summary>
@@ -54,6 +57,9 @@ namespace Kinect_TP.ViewModel
             StopKinectCommand = new RelayCommand(Stop);
 
             ColorImageStreamCommand = new RelayCommand(ColorImageStream);
+            BodyImageStreamCommand = new RelayCommand(BodyImageStream);
+            IRImageStreamCommand = new RelayCommand(IRImageStream);
+            DepthImageStreamCommand = new RelayCommand(DepthImageStream);
         }
 
         /// <summary>

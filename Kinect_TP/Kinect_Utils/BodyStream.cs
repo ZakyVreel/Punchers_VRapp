@@ -18,12 +18,13 @@
         private const double ClipBoundsThickness = 10;
         private const float InferredZPositionClamp = 0.1f;
 
-        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0));
-        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0));
-        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255));
-        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
-        private readonly Brush inferredJointBrush = Brushes.Yellow;
-        private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
+        
+        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); //Couleur pour la main fermé
+        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)); //Couleur pour la main ouverte
+        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)); //Couleur pour la main en lasso
+        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68)); //Couleur pour l'articulation
+        private readonly Brush inferredJointBrush = Brushes.Yellow; //Couleur pour les membres inferieurs
+        private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1); //Couleur pour l'os inféré
 
         private DrawingGroup drawingGroup = new DrawingGroup();
         private Body[] bodies;

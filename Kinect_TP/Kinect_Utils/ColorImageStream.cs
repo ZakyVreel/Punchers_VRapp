@@ -50,6 +50,8 @@ namespace Kinect_Utils
         public ColorImageStream(KinectManager kinectSensor) : base(kinectSensor)
         {
             FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
+
+            //On on prends les pixelWidht, pixelHeight, le DPIHorizontale et DPIVerticale , ensuite le format qu'on veut
             this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
         }
 
