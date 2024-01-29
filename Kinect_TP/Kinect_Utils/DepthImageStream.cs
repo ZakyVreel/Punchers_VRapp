@@ -17,7 +17,7 @@ namespace KinectConnection
     public class DepthImageStream : KinectStream
     {
 
-        private const int MapDepthToByte = 8000 / 256; //Indique comment convertir les valeurs de profondeur representé sur 8 octets
+        private const int MapDepthToByte = 8000 / 256; // Comment convertir les valeurs de profondeur representé sur 8 octets
 
         private KinectSensor kinectSensor = null; // Capteur Kinect actif
 
@@ -59,7 +59,7 @@ namespace KinectConnection
         {
             if (this.Sensor != null)
             {
-                // Ouvrir le lecteur pour les frames de profondeur
+                // Ouvre le lecteur des frames de profondeur
                 this.depthFrameReader = this.Sensor.DepthFrameSource.OpenReader();
 
                 if (this.depthFrameReader != null)

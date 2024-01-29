@@ -18,7 +18,7 @@
         private const double ClipBoundsThickness = 10;
         private const float InferredZPositionClamp = 0.1f;
 
-        
+        // Color.FromArgb(transparent, red, green, blue)
         private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); //Couleur pour la main fermé
         private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)); //Couleur pour la main ouverte
         private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)); //Couleur pour la main en lasso
@@ -26,7 +26,10 @@
         private readonly Brush inferredJointBrush = Brushes.Yellow; //Couleur pour les membres inferieurs
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1); //Couleur pour l'os inféré
 
+        // regroupe plusieurs objets Drawing
         private DrawingGroup drawingGroup = new DrawingGroup();
+
+        // La classe Body représente un objet qui contient des informations sur un corps humain détecté par le capteur Kinect
         private Body[] bodies;
         private List<Tuple<JointType, JointType>> bones;
         private int displayWidth;
@@ -44,7 +47,6 @@
             get { return new DrawingImage(this.drawingGroup); }
         }
 
-        public string StatusText { get; private set; }
 
         public BodyStream(KinectManager kinectSensor) : base(kinectSensor)
         {
@@ -72,10 +74,13 @@
         private void InitializeKinect()
         {
             this.kinectSensor = KinectSensor.GetDefault();
+            // permet de convertir des coordonnées entre différents espaces, notamment entre l'espace de la caméra Kinect et autres
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
+            // framedescription donne des informations sur une image
             FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
             this.displayWidth = frameDescription.Width;
             this.displayHeight = frameDescription.Height;
+            // BodyFrameSource donne des données relatives au suivi du corps -> source de cadres avec des informations sur les mouvements / la posture des personnes détectées
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
 
             this.bones = new List<Tuple<JointType, JointType>>();
@@ -133,6 +138,7 @@
         {
             if (this.bodyFrameReader != null)
             {
+                // est déclenché chaque fois qu'une nouvelle frame relatif au suivi du corps est disponible pour la lecture
                 this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             }
         }
@@ -149,10 +155,13 @@
         {
             bool dataReceived = false;
 
+            // using pour garantir la libération des ressources associées au bodyframe
+            // on récupère la frame du corps à partir de la référence fournie par l'événement
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
                 if (bodyFrame != null)
                 {
+                    // si il y pas de body on set les bodies sinon on fait rien et on rafraichies juste la frame avec les nouveaux bodies
                     if (this.bodies == null)
                     {
                         this.bodies = new Body[bodyFrame.BodyCount];
@@ -165,32 +174,44 @@
 
             if (dataReceived)
             {
+                // ouvre un groupe de dessins
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
-                    // Draw a transparent background to set the render size
+                    // permet de dessiner un rectangle noir en fond, transparent pour qu'on puisse écrire dessus
+                    // les 0 sont les valeurs de X et Y qu'on a pas besoin de définir
                     dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
                     {
+                        // choisi un pen d'une couleur en fonction de l'index
                         Pen drawPen = this.bodyColors[penIndex++];
 
+                        // vérifie sur le corps est actuellement suivi ou non
                         if (body.IsTracked)
                         {
                             this.DrawClippedEdges(body, dc);
 
+                            // pour avoir tout les joints du body
                             IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
 
+                            // dictionnaire pour stocker les joints mais en coordonnées 2D avec des points
                             Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
 
+                            // parcours type de joint
                             foreach (JointType jointType in joints.Keys)
                             {
+                                // obtient position du joint en espace caméra
                                 CameraSpacePoint position = joints[jointType].Position;
+                                // vérifie si la profondeur du joint est inférieur à 0
                                 if (position.Z < 0)
                                 {
+                                    //  ajuste la coordonnée Z (profondeur) d'un joint à la valeur claquée (InferredZPositionClamp) pour éviter les problèmes associés à la détection incorrecte ou indéterminée
+                                    // peut etre enlevable ??
                                     position.Z = InferredZPositionClamp;
                                 }
-
+                                // convertis espace de caméra en coordonnées 2D
+                                // detphspace contient coordonnées 2D avec 2 attributs, X et Y, ces 2 attributs vont permettre de construire le joint
                                 DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
                                 jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
                             }
@@ -256,10 +277,13 @@
             }
         }
 
+        // dessine des indicateurs visuels pour signaler si une partie de son corps est hors de la zone de suivi du Kinect
         private void DrawClippedEdges(Body body, DrawingContext drawingContext)
         {
+            // obtient les bords du cadre (FrameEdges) qui sont actuellement coupés par le corps donné
             FrameEdges clippedEdges = body.ClippedEdges;
 
+            // vérifie si le bas du cadre de visualisation est coupé, sinon faire un rectangle rouge
             if (clippedEdges.HasFlag(FrameEdges.Bottom))
             {
                 drawingContext.DrawRectangle(
@@ -268,6 +292,7 @@
                     new Rect(0, this.displayHeight - ClipBoundsThickness, this.displayWidth, ClipBoundsThickness));
             }
 
+            // vérifie si le haut du cadre de visualisation est coupé, sinon faire un rectangle rouge
             if (clippedEdges.HasFlag(FrameEdges.Top))
             {
                 drawingContext.DrawRectangle(
@@ -276,6 +301,7 @@
                     new Rect(0, 0, this.displayWidth, ClipBoundsThickness));
             }
 
+            // vérifie si la gauche du cadre de visualisation est coupé, sinon faire un rectangle rouge
             if (clippedEdges.HasFlag(FrameEdges.Left))
             {
                 drawingContext.DrawRectangle(
@@ -284,6 +310,7 @@
                     new Rect(0, 0, ClipBoundsThickness, this.displayHeight));
             }
 
+            // vérifie si la droite du cadre de visualisation est coupé, sinon faire un rectangle rouge
             if (clippedEdges.HasFlag(FrameEdges.Right))
             {
                 drawingContext.DrawRectangle(
