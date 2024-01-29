@@ -39,6 +39,7 @@ namespace Kinect_Utils
 
         }
 
+        // [Indexeur] permetant d'aceder un element de la factory en fonction d'un type KinectStreams (enum)
         public KinectStream? this[KinectStreams streamType]
         {
             get
