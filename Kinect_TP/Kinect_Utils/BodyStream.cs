@@ -33,7 +33,6 @@
         private int displayHeight;
         private List<Pen> bodyColors;
 
-        private DrawingImage imageSource = new DrawingImage();
         private KinectSensor kinectSensor;
         private CoordinateMapper coordinateMapper;
         private BodyFrameReader bodyFrameReader;
@@ -42,7 +41,7 @@
 
         public override ImageSource ImageSource
         {
-            get { return this.imageSource; }
+            get { return new DrawingImage(this.drawingGroup); }
         }
 
         public string StatusText { get; private set; }
@@ -122,7 +121,6 @@
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
 
-            this.imageSource = new DrawingImage(this.drawingGroup);
         }
 
         private void InitializeDrawingObjects()

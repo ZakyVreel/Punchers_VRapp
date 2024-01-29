@@ -54,10 +54,8 @@ namespace Kinect_Utils
             {
                 this.infraredFrameReader = this.Sensor.InfraredFrameSource.OpenReader();
 
-                if (this.infraredFrameReader != null)
-                {
-                    this.infraredFrameReader.FrameArrived += this.Reader_InfraredFrameArrived;
-                }
+                this.infraredFrameReader.FrameArrived += this.Reader_InfraredFrameArrived;
+                
             }
         }
 
