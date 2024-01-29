@@ -12,18 +12,18 @@ using System.Windows.Media.Imaging;
 namespace KinectConnection
 {
     /// <summary>
-    /// Classe représentant un flux d'image de profondeur pour la Kinect.
+    /// Classe représentant un flux d'image de depth pour la Kinect.
     /// </summary>
     public class DepthImageStream : KinectStream
     {
 
-        private const int MapDepthToByte = 8000 / 256; // Comment convertir les valeurs de profondeur representé sur 8 octets
+        private const int MapDepthToByte = 8000 / 256; // Comment convertir les valeurs de depth representé sur 8 octets
 
         private KinectSensor kinectSensor = null; // Capteur Kinect actif
 
-        private DepthFrameReader depthFrameReader = null; // Lecteur pour les frames de profondeur
+        private DepthFrameReader depthFrameReader = null; // Lecteur pour les frames de depth
 
-        private FrameDescription depthFrameDescription = null; // Description des données contenues dans la frame de profondeur
+        private FrameDescription depthFrameDescription = null; // Description des données contenues dans la frame de depth
 
         private WriteableBitmap depthBitmap = null; // Bitmap à afficher
 
@@ -53,25 +53,25 @@ namespace KinectConnection
         }
 
         /// <summary>
-        /// Démarre la lecture du flux de profondeur.
+        /// Démarre la lecture du flux de depth.
         /// </summary>
         public override void Start()
         {
             if (this.Sensor != null)
             {
-                // Ouvre le lecteur des frames de profondeur
+                // Ouvre le lecteur des frames de depth
                 this.depthFrameReader = this.Sensor.DepthFrameSource.OpenReader();
 
                 if (this.depthFrameReader != null)
                 {
-                    // Connecter le gestionnaire pour l'arrivée de la frame
+                    // S'abonner à l'évenement dès qu'une frame arrive
                     this.depthFrameReader.FrameArrived += this.Reader_FrameArrived;
                 }
             }
         }
 
         /// <summary>
-        /// Arrête la lecture du flux de profondeur.
+        /// Arrête la lecture du flux de depth.
         /// </summary>
         public override void Stop()
         {
@@ -79,15 +79,15 @@ namespace KinectConnection
             {
                 this.depthFrameReader.FrameArrived -= this.Reader_FrameArrived;
 
-                // Libérer le lecteur pour libérer les ressources.
-                // Si nous ne le faisons pas manuellement, le GC le fera pour nous, mais nous ne savons pas quand.
+                // libère le reader pour libérer les ressources
+                // Si nous ne le faisons pas manuellement, le GC le fera pour nous, mais nous ne savons pas quand
                 this.depthFrameReader.Dispose();
                 this.depthFrameReader = null;
             }
         }
 
         /// <summary>
-        /// Méthode appelée lors de l'arrivée d'une nouvelle frame de profondeur.
+        /// Méthode appelée lors de l'arrivée d'une nouvelle frame de depth.
         /// </summary>
         /// <param name="sender">objet émettant l'événement</param>
         /// <param name="e">arguments de l'événement</param>
@@ -99,15 +99,14 @@ namespace KinectConnection
             {
                 if (depthFrame != null)
                 {
-                    // La manière la plus rapide de traiter les données d'index de corps est d'accéder directement au tampon sous-jacent
+                    // On accède directement au buffer
                     using (Microsoft.Kinect.KinectBuffer depthBuffer = depthFrame.LockImageBuffer())
                     {
                         // Vérifier les données et écrire les données de couleur dans la bitmap d'affichage
                         if (((this.depthFrameDescription.Width * this.depthFrameDescription.Height) == (depthBuffer.Size / this.depthFrameDescription.BytesPerPixel)) &&
                             (this.depthFrameDescription.Width == this.depthBitmap.PixelWidth) && (this.depthFrameDescription.Height == this.depthBitmap.PixelHeight))
                         {
-                            // Remarque : Pour voir l'ensemble de la plage de profondeur (y compris la profondeur de champ lointain moins fiable)
-                            // nous réglons maxDepth sur la limite extrême de profondeur potentielle
+                            // Pour voir l'ensemble de la plage de depth (y compris la depth de champ lointain moins fiable), nous réglons maxDepth sur la limite extrême de depth potentielle
                             ushort maxDepth = ushort.MaxValue;
 
 
@@ -125,30 +124,30 @@ namespace KinectConnection
         }
 
         /// <summary>
-        /// Accède directement au tampon d'image sous-jacent du DepthFrame
+        /// Accède directement au buffer du DepthFrame
         /// pour créer une bitmap affichable.
-        /// Cette méthode nécessite l'option du compilateur "/unsafe" pour avoir directement accès
+        /// Méthode permettant l'option du compilateur "/unsafe" pour avoir directement accès
         /// à la mémoire native pointée par le pointeur depthFrameData.
         /// </summary>
         private unsafe void ProcessDepthFrameData(IntPtr depthFrameData, uint depthFrameDataSize, ushort minDepth, ushort maxDepth)
         {
-            // Les données de frame de profondeur sont des valeurs de 16 bits
+            // données de frame sont des valeurs de 16 bits
             ushort* frameData = (ushort*)depthFrameData;
 
-            // Convertir la profondeur en une représentation visuelle
+            // convertis la depth en une représentation visuelle
             for (int i = 0; i < (int)(depthFrameDataSize / this.depthFrameDescription.BytesPerPixel); ++i)
             {
-                // Obtenir la profondeur pour ce pixel
+                // obtient la depth pour ce pixel
                 ushort depth = frameData[i];
 
-                // Pour convertir en un octet, nous mappions la valeur de profondeur à la plage d'octets.
-                // Les valeurs en dehors de la plage de profondeur fiable sont mappées à 0 (noir).
+                // Pour convertir en un octet, on mappe la valeur de depth à la plage d'octets.
+                // Les valeurs en dehors de la plage de depth fiable sont mappées à 0 (noir).
                 this.depthPixels[i] = (byte)(depth >= minDepth && depth <= maxDepth ? (depth / MapDepthToByte) : 0);
             }
         }
 
         /// <summary>
-        /// Rend les pixels de profondeur dans la bitmap.
+        /// Rend les pixels de depth dans la bitmap.
         /// </summary>
         private void RenderDepthPixels()
         {

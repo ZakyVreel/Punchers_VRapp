@@ -41,7 +41,7 @@ namespace Kinect_Utils
         {
             this.infraredFrameDescription = this.Sensor.InfraredFrameSource.FrameDescription;
 
-            //On on prends les pixelWidht, pixelHeight, le DPIHorizontale et DPIVerticale , ensuite le format qu'on veut
+            // on prends les pixelWidht, pixelHeight, le DPIHorizontale et DPIVerticale , ensuite le format qu'on veut
             this.infraredBitmap = new WriteableBitmap(this.infraredFrameDescription.Width, this.infraredFrameDescription.Height, 96, 96, PixelFormats.Gray32Float, null);
         }
 
@@ -94,7 +94,7 @@ namespace Kinect_Utils
         }
 
         /// <summary>
-        /// Accède directement au tampon d'image sous-jacent du InfraredFrame pour créer une bitmap affichable.
+        /// Accède directement au buffer d'image du InfraredFrame pour créer une bitmap affichable.
         /// </summary>
         /// <param name="infraredFrameData">Pointeur vers les données d'image InfraredFrame</param>
         /// <param name="infraredFrameDataSize">Taille des données d'image InfraredFrame</param>
@@ -106,14 +106,13 @@ namespace Kinect_Utils
             // On lock la bitmap
             this.infraredBitmap.Lock();
 
-            // Obtenir le pointeur vers le backfuffer de la bitmap
+            // Obtient le pointeur vers le backfuffer de la bitmap
             float* backBuffer = (float*)this.infraredBitmap.BackBuffer;
 
-            // Traiter les données infrarouges
+            // Traite les données infrarouges
             for (int i = 0; i < (int)(infraredFrameDataSize / this.infraredFrameDescription.BytesPerPixel); ++i)
             {
-                // Étant donné que nous affichons l'image comme une image en niveaux de gris normalisée,
-                // nous devons convertir les données ushort qui ont été fournis par le InfraredFrame
+                // Vu qu'on affiche l'image comme une image en niveaux de gris normalisée on doit convertir les données ushort qui ont été fournis par le InfraredFrame
                 // en une valeur comprise entre [InfraredOutputValueMinimum, InfraredOutputValueMaximum]
                 backBuffer[i] = Math.Min(InfraredOutputValueMaximum, (((float)frameData[i] / InfraredSourceValueMaximum * InfraredSourceScale) * (1.0f - InfraredOutputValueMinimum)) + InfraredOutputValueMinimum);
             }
