@@ -24,7 +24,7 @@ namespace Kinect_Utils
 
         public KinectStream(KinectManager manager)
         {
-            Sensor = manager.kinectSensor;
+            Sensor = manager.KinectSensor;
             Manager = manager;
         }
 

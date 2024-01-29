@@ -200,7 +200,7 @@
                         // vérifie sur le corps est actuellement suivi ou non
                         if (body.IsTracked)
                         {
-                            this.DrawClippedEdges(body, dc);
+                            //this.DrawClippedEdges(body, dc); //Bordures pour le carré
 
                             // pour avoir tout les joints du body
                             IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
