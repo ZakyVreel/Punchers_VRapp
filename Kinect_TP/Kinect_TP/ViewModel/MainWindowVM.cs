@@ -26,7 +26,24 @@ namespace Kinect_TP.ViewModel
         public ICommand BodyImageStreamCommand { get; set; }
         public ICommand IRImageStreamCommand { get; set; }
         public ICommand DepthImageStreamCommand { get; set; }
+        public ICommand BodyAndColorImageStreamCommand { get; set; }
+        
         public KinectManager KinectManager { get; set; }
+
+        private bool isSecondViewboxVisible;
+        public bool IsSecondViewboxVisible
+        {
+            get { return isSecondViewboxVisible; }
+            set
+            {
+                if (isSecondViewboxVisible != value)
+                {
+                    isSecondViewboxVisible = value;
+                    OnPropertyChanged(nameof(IsSecondViewboxVisible));
+                }
+            }
+        }
+
 
         /// <summary>
         /// Le Kinect streams factory pour la creation des streams.
@@ -34,6 +51,7 @@ namespace Kinect_TP.ViewModel
         public KinectStreamsFactory KinectStreamsFactory { get; set; }
 
         public KinectStream kinectStream;
+        public KinectStream kinectStream2; // Pour le BodyColor Ensemble
         public KinectStream KinectStream {
             get { return kinectStream; }
             set
@@ -41,6 +59,18 @@ namespace Kinect_TP.ViewModel
                 if (value != null)
                 {
                     SetProperty(ref kinectStream, value);
+                }
+            }
+        }
+
+        public KinectStream KinectStream2
+        {
+            get { return kinectStream2; }
+            set
+            {
+                if (value != null)
+                {
+                    SetProperty(ref kinectStream2, value);
                 }
             }
         }
@@ -60,6 +90,7 @@ namespace Kinect_TP.ViewModel
             BodyImageStreamCommand = new RelayCommand(BodyImageStream);
             IRImageStreamCommand = new RelayCommand(IRImageStream);
             DepthImageStreamCommand = new RelayCommand(DepthImageStream);
+            BodyAndColorImageStreamCommand = new RelayCommand(BodyAndColorImageStream);
         }
 
         /// <summary>
@@ -81,6 +112,10 @@ namespace Kinect_TP.ViewModel
             {
                 KinectStream.Stop();
             }
+            if (KinectStream2 != null)
+            {
+                KinectStream2.Stop();
+            }
             KinectStream = KinectStreamsFactory[KinectStreams.Color];
             KinectStream.Start();
         }
@@ -90,6 +125,10 @@ namespace Kinect_TP.ViewModel
             if (KinectStream != null)
             {
                 KinectStream.Stop();
+            }
+            if (KinectStream2 != null)
+            {
+                KinectStream2.Stop();
             }
             KinectStream = KinectStreamsFactory[KinectStreams.Body];
             KinectStream.Start();
@@ -101,6 +140,10 @@ namespace Kinect_TP.ViewModel
             {
                 KinectStream.Stop();
             }
+            if (KinectStream2 != null)
+            {
+                KinectStream2.Stop();
+            }
             KinectStream = KinectStreamsFactory[KinectStreams.IR];
             KinectStream.Start();
         }
@@ -111,7 +154,28 @@ namespace Kinect_TP.ViewModel
             {
                 KinectStream.Stop();
             }
+            if (KinectStream2 != null)
+            {
+                KinectStream2.Stop();
+            }
             KinectStream = KinectStreamsFactory[KinectStreams.Depth];
+            KinectStream.Start();
+        }
+
+        private void BodyAndColorImageStream()
+        {
+            if (KinectStream != null)
+            {
+                KinectStream.Stop();
+            }
+            if (KinectStream2 != null)
+            {
+                KinectStream2.Stop();
+            }
+            KinectStream2 = KinectStreamsFactory[KinectStreams.Body];
+            KinectStream2.Start();
+            
+            KinectStream = KinectStreamsFactory[KinectStreams.Color];
             KinectStream.Start();
         }
 

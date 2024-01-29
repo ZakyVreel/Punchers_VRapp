@@ -23,7 +23,7 @@ namespace Kinect_Utils
         public WriteableBitmap Bitmap
         {
             get { return bitmap; }
-            set
+            private set
             {
                 if (value != null)
                 {
@@ -88,8 +88,6 @@ namespace Kinect_Utils
                 // Si nous ne le faisons pas manuellement, le GC le fera pour nous, mais nous ne savons pas quand.
                 this.colorFrameReader.Dispose();
                 this.colorFrameReader = null;
-
-                //base.Stop(); Cela, on est d'accord, va simplement arrêter la kinect?
             }
         }
 

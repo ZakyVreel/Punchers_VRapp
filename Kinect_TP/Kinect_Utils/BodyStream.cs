@@ -36,15 +36,16 @@
         private int displayHeight;
         private List<Pen> bodyColors;
 
-        private KinectSensor kinectSensor;
+        //private KinectSensor kinectSensor;
         private CoordinateMapper coordinateMapper;
         private BodyFrameReader bodyFrameReader;
+        private DrawingImage drawingImage;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public override ImageSource ImageSource
         {
-            get { return new DrawingImage(this.drawingGroup); }
+            get { return drawingImage; }
         }
 
 
@@ -73,15 +74,15 @@
 
         private void InitializeKinect()
         {
-            this.kinectSensor = KinectSensor.GetDefault();
+            //this.Sensor = KinectSensor.GetDefault();
             // permet de convertir des coordonnées entre différents espaces, notamment entre l'espace de la caméra Kinect et autres
-            this.coordinateMapper = this.kinectSensor.CoordinateMapper;
+            this.coordinateMapper = this.Sensor.CoordinateMapper;
             // framedescription donne des informations sur une image
-            FrameDescription frameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
+            FrameDescription frameDescription = this.Sensor.DepthFrameSource.FrameDescription;
             this.displayWidth = frameDescription.Width;
             this.displayHeight = frameDescription.Height;
             // BodyFrameSource donne des données relatives au suivi du corps -> source de cadres avec des informations sur les mouvements / la posture des personnes détectées
-            this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
+            this.bodyFrameReader = this.Sensor.BodyFrameSource.OpenReader();
 
             this.bones = new List<Tuple<JointType, JointType>>();
             // Torso
@@ -126,12 +127,17 @@
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
 
+            
+
+
         }
 
         private void InitializeDrawingObjects()
         {
             this.drawingGroup = new DrawingGroup();
-            this.bodies = new Body[this.kinectSensor.BodyFrameSource.BodyCount];
+            this.bodies = new Body[this.Sensor.BodyFrameSource.BodyCount];
+
+            drawingImage = new DrawingImage(this.drawingGroup);
         }
 
         public void StartProcessing()
@@ -145,9 +151,12 @@
 
         public void StopProcessing()
         {
+            this.drawingImage.Drawing = null;
             if (this.bodyFrameReader != null)
             {
                 this.bodyFrameReader.FrameArrived -= this.Reader_FrameArrived;
+                this.bodyFrameReader.Dispose();
+                this.bodyFrameReader = null;
             }
         }
 
@@ -179,7 +188,8 @@
                 {
                     // permet de dessiner un rectangle noir en fond, transparent pour qu'on puisse écrire dessus
                     // les 0 sont les valeurs de X et Y qu'on a pas besoin de définir
-                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                    
+                    //dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
