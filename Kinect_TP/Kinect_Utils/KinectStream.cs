@@ -7,15 +7,20 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Kinect_Utils
 {
-    // Classe abstract pour les kinect streams
+    /// <summary>
+    /// Classe abstract pour les kinect streams
+    /// </summary>
     public abstract class KinectStream : ObservableObject
     {
-        protected KinectSensor Sensor { get; set; }
+        protected KinectSensor Sensor { get; set; } // Propriété représentant le capteur Kinect associé à ce flux
 
-        protected KinectManager Manager { get; set; }
+        protected KinectManager Manager { get; set; } // Propriété représentant le gestionnaire KinectManager associé à ce flux
+
+        public abstract ImageSource ImageSource { get; } // Propriété abstraite pour obtenir la source d'image du flux, à implémenter dans les images streams
 
         public KinectStream(KinectManager manager)
         {
@@ -23,11 +28,11 @@ namespace Kinect_Utils
             Manager = manager;
         }
 
-        virtual public void Start()
+        virtual public void Start() // Méthode virtuelle pour démarrer le flux Kinect
         {
             Manager.StartSensor();
         }
-        virtual public void Stop()
+        virtual public void Stop() // Méthode virtuelle pour arrêter le flux Kinect
         {
             Manager.StopSensor();
         }

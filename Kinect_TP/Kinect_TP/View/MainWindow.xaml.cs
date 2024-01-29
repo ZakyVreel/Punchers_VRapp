@@ -25,23 +25,16 @@ namespace Kinect_TP.View
         public MainWindow()
         {
             MainWindowVM = new MainWindowVM();
-            DataContext = MainWindowVM;
             InitializeComponent();
+            DataContext = MainWindowVM;
         }
 
         //Methode que sera appelé lors que la page est chargé
-        private void WindowLoad(object sender, EventArgs e)
+        public override void BeginInit()
         {
+            base.BeginInit();
             MainWindowVM.StartKinectCommand.Execute(null);
-            MainWindowVM.StartColorImageStreamCommand.Execute(null);
         }
-
-        //Methode que sera appelé lors que la page est dechargé
-        private void WindowUnload(object sender, EventArgs e)
-        {
-            MainWindowVM.StopKinectCommand.Execute(null);
-        }
-
 
     }
 }

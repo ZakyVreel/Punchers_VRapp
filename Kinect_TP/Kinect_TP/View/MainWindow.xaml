@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Loaded="WindowLoad"
-        Unloaded="WindowUnload"
+        xmlns:toolkit="clr-namespace:CommunityToolkit.Mvvm.Input;assembly=CommunityToolkit.Mvvm"
         xmlns:local="clr-namespace:Kinect_TP.View"
         xmlns:converters="clr-namespace:Kinect_TP.Converter"
         mc:Ignorable="d"
@@ -32,15 +31,15 @@
             <Ellipse x:Name="CercleStart" Width="40" Height="40" Fill="{Binding KinectManager.Status, Converter={StaticResource BoolToColorConverter}}"/>
             <TextBlock Text="{Binding KinectManager.StatusText}" Margin="10,10,0,0" FontSize="16"/>
         </StackPanel>
-        
-        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}" Margin="10">Color</Button>
-        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource RoundedButtonStyle}" Margin="10">Depth</Button>
-        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource RoundedButtonStyle}" Margin="10">Infrared</Button>
-        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource RoundedButtonStyle}" Margin="10">Body</Button>
+
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource RoundedButtonStyle}" Margin="10" Command="{Binding ColorImageStreamCommand}">Color</Button>
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource RoundedButtonStyle}" Margin="10" Command="{Binding DepthImageStreamCommand}">Depth</Button>
+        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource RoundedButtonStyle}" Margin="10" Command="{Binding IRImageStreamCommand}">Infrared</Button>
+        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource RoundedButtonStyle}" Margin="10" Command="{Binding BodyImageStreamCommand}">Body</Button>
         <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource RoundedButtonStyle}" Margin="10">Body and Color</Button>
 
         <Viewbox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Image  Source="{Binding ColorImageStream.Bitmap}" Stretch="UniformToFill" />
+            <Image Source="{Binding KinectStream.ImageSource}" Stretch="UniformToFill" />
         </Viewbox>
 
     </Grid>
