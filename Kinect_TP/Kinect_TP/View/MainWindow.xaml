@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:toolkit="clr-namespace:CommunityToolkit.Mvvm.Input;assembly=CommunityToolkit.Mvvm"
         xmlns:local="clr-namespace:Kinect_TP.View"
+        Loaded="WindowLoad"
+        Unloaded="WindowUnload"
         xmlns:converters="clr-namespace:Kinect_TP.Converter"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">

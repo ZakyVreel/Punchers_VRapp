@@ -109,23 +109,29 @@ namespace Kinect_Utils
             {
                 if (colorFrame != null)
                 {
+                    // prend la description des frame de la color
                     FrameDescription colorFrameDescription = colorFrame.FrameDescription;
 
+                    // Acquisition du buffer brut de l'image couleur
                     using (KinectBuffer colorBuffer = colorFrame.LockRawImageBuffer())
                     {
+                        // Verrouillage du bitmap pour éviter les accès concurrents
                         this.bitmap.Lock();
 
-                        // verify data and write the new color frame data to the display bitmap
+                        // Vérification des données et écriture des nouvelles données de trame couleur dans le bitmap d'affichage
                         if ((colorFrameDescription.Width == this.bitmap.PixelWidth) && (colorFrameDescription.Height == this.bitmap.PixelHeight))
                         {
+                            // Copie des données de trame converties dans le IntPtr du back buffer du bitmap
                             colorFrame.CopyConvertedFrameDataToIntPtr(
                                 this.bitmap.BackBuffer,
                                 (uint)(colorFrameDescription.Width * colorFrameDescription.Height * 4),
                                 ColorImageFormat.Bgra);
 
+                            // Ajout de la région modifiée du bitmap pour mise à jour
                             this.bitmap.AddDirtyRect(new Int32Rect(0, 0, this.bitmap.PixelWidth, this.bitmap.PixelHeight));
                         }
 
+                        // Déverrouillage du bitmap
                         this.bitmap.Unlock();
                     }
                 }

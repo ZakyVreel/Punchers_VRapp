@@ -13,15 +13,15 @@
     /// </summary>
     public class BodyStream : KinectStream
     {
-        private const double HandSize = 30;
+        //private const double HandSize = 30;
         private const double JointThickness = 3;
-        private const double ClipBoundsThickness = 10;
+        //private const double ClipBoundsThickness = 10;
         private const float InferredZPositionClamp = 0.1f;
 
         // Color.FromArgb(transparent, red, green, blue)
-        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); //Couleur pour la main fermé
-        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)); //Couleur pour la main ouverte
-        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)); //Couleur pour la main en lasso
+        //private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); //Couleur pour la main fermé
+        //private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)); //Couleur pour la main ouverte
+        //private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)); //Couleur pour la main en lasso
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68)); //Couleur pour l'articulation
         private readonly Brush inferredJointBrush = Brushes.Yellow; //Couleur pour les membres inferieurs
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1); //Couleur pour l'os inféré
@@ -79,6 +79,7 @@
             this.coordinateMapper = this.Sensor.CoordinateMapper;
             // framedescription donne des informations sur une image
             FrameDescription frameDescription = this.Sensor.DepthFrameSource.FrameDescription;
+            //changer le depth pour l'accorder au body stream et avoir un color + body stream propre
             this.displayWidth = frameDescription.Width;
             this.displayHeight = frameDescription.Height;
             // BodyFrameSource donne des données relatives au suivi du corps -> source de cadres avec des informations sur les mouvements / la posture des personnes détectées
@@ -228,8 +229,8 @@
 
                             this.DrawBody(joints, jointPoints, dc, drawPen);
 
-                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
-                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+                            //this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
+                            //this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
                         }
                     }
 
@@ -244,6 +245,7 @@
             // Draw the bones
             foreach (var bone in this.bones)
             {
+                //pour chaque bone, le dessiner
                 this.DrawBone(joints, jointPoints, bone.Item1, bone.Item2, drawingContext, drawingPen);
             }
 
@@ -264,71 +266,72 @@
 
                 if (drawBrush != null)
                 {
+                    // on dessine une ellipse en fonction de si le joint est inferré ou non
                     drawingContext.DrawEllipse(drawBrush, null, jointPoints[jointType], JointThickness, JointThickness);
                 }
             }
         }
 
-        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
-        {
-            switch (handState)
-            {
-                case HandState.Closed:
-                    drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
-                    break;
+        //private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
+        //{
+        //    switch (handState)
+        //    {
+        //        case HandState.Closed:
+        //            drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
+        //            break;
 
-                case HandState.Open:
-                    drawingContext.DrawEllipse(this.handOpenBrush, null, handPosition, HandSize, HandSize);
-                    break;
+        //        case HandState.Open:
+        //            drawingContext.DrawEllipse(this.handOpenBrush, null, handPosition, HandSize, HandSize);
+        //            break;
 
-                case HandState.Lasso:
-                    drawingContext.DrawEllipse(this.handLassoBrush, null, handPosition, HandSize, HandSize);
-                    break;
-            }
-        }
+        //        case HandState.Lasso:
+        //            drawingContext.DrawEllipse(this.handLassoBrush, null, handPosition, HandSize, HandSize);
+        //            break;
+        //    }
+        //}
 
         // dessine des indicateurs visuels pour signaler si une partie de son corps est hors de la zone de suivi du Kinect
-        private void DrawClippedEdges(Body body, DrawingContext drawingContext)
-        {
-            // obtient les bords du cadre (FrameEdges) qui sont actuellement coupés par le corps donné
-            FrameEdges clippedEdges = body.ClippedEdges;
+        //private void DrawClippedEdges(Body body, DrawingContext drawingContext)
+        //{
+        //    // obtient les bords du cadre (FrameEdges) qui sont actuellement coupés par le corps donné
+        //    FrameEdges clippedEdges = body.ClippedEdges;
 
-            // vérifie si le bas du cadre de visualisation est coupé, sinon faire un rectangle rouge
-            if (clippedEdges.HasFlag(FrameEdges.Bottom))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, this.displayHeight - ClipBoundsThickness, this.displayWidth, ClipBoundsThickness));
-            }
+        //    // vérifie si le bas du cadre de visualisation est coupé, sinon faire un rectangle rouge
+        //    if (clippedEdges.HasFlag(FrameEdges.Bottom))
+        //    {
+        //        drawingContext.DrawRectangle(
+        //            Brushes.Red,
+        //            null,
+        //            new Rect(0, this.displayHeight - ClipBoundsThickness, this.displayWidth, ClipBoundsThickness));
+        //    }
 
-            // vérifie si le haut du cadre de visualisation est coupé, sinon faire un rectangle rouge
-            if (clippedEdges.HasFlag(FrameEdges.Top))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, this.displayWidth, ClipBoundsThickness));
-            }
+        //    // vérifie si le haut du cadre de visualisation est coupé, sinon faire un rectangle rouge
+        //    if (clippedEdges.HasFlag(FrameEdges.Top))
+        //    {
+        //        drawingContext.DrawRectangle(
+        //            Brushes.Red,
+        //            null,
+        //            new Rect(0, 0, this.displayWidth, ClipBoundsThickness));
+        //    }
 
-            // vérifie si la gauche du cadre de visualisation est coupé, sinon faire un rectangle rouge
-            if (clippedEdges.HasFlag(FrameEdges.Left))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, ClipBoundsThickness, this.displayHeight));
-            }
+        //    // vérifie si la gauche du cadre de visualisation est coupé, sinon faire un rectangle rouge
+        //    if (clippedEdges.HasFlag(FrameEdges.Left))
+        //    {
+        //        drawingContext.DrawRectangle(
+        //            Brushes.Red,
+        //            null,
+        //            new Rect(0, 0, ClipBoundsThickness, this.displayHeight));
+        //    }
 
-            // vérifie si la droite du cadre de visualisation est coupé, sinon faire un rectangle rouge
-            if (clippedEdges.HasFlag(FrameEdges.Right))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(this.displayWidth - ClipBoundsThickness, 0, ClipBoundsThickness, this.displayHeight));
-            }
-        }
+        //    // vérifie si la droite du cadre de visualisation est coupé, sinon faire un rectangle rouge
+        //    if (clippedEdges.HasFlag(FrameEdges.Right))
+        //    {
+        //        drawingContext.DrawRectangle(
+        //            Brushes.Red,
+        //            null,
+        //            new Rect(this.displayWidth - ClipBoundsThickness, 0, ClipBoundsThickness, this.displayHeight));
+        //    }
+        //}
 
         private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen)
         {
@@ -342,13 +345,14 @@
             }
 
             // On suppose que tous les os dessinés sont inférés sauf si LES DEUX joints sont suivis
-            Pen drawPen = this.inferredBonePen;
-            if (joint0.TrackingState == TrackingState.Tracked && joint1.TrackingState == TrackingState.Tracked)
-            {
-                drawPen = drawingPen;
-            }
+            //pour avoir un pen différent si l'os est inféré
+            //Pen drawPen = this.inferredBonePen;
+            //if (joint0.TrackingState == TrackingState.Tracked && joint1.TrackingState == TrackingState.Tracked)
+            //{
+            //    drawPen = drawingPen;
+            //}
 
-            drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
+            drawingContext.DrawLine(drawingPen, jointPoints[jointType0], jointPoints[jointType1]);
         }
 
 

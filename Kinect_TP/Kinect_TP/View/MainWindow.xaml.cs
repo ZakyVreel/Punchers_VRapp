@@ -30,10 +30,20 @@ namespace Kinect_TP.View
         }
 
         //Methode que sera appelé lors que la page est chargé
-        public override void BeginInit()
+        //public override void BeginInit()
+        //{
+        //    base.BeginInit();
+        //    MainWindowVM.StartKinectCommand.Execute(null);
+        //}
+
+        private void WindowLoad(object sender, EventArgs e)
         {
-            base.BeginInit();
             MainWindowVM.StartKinectCommand.Execute(null);
+        }
+
+        private void WindowUnload(object sender, EventArgs e)
+        {
+            MainWindowVM.StopKinectCommand.Execute(null);
         }
 
     }
