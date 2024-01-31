@@ -82,7 +82,7 @@ namespace KinectConnection
                 // libère le reader pour libérer les ressources
                 // Si nous ne le faisons pas manuellement, le GC le fera pour nous, mais nous ne savons pas quand
                 this.depthFrameReader.Dispose();
-                this.depthFrameReader = null;
+               // this.depthFrameReader = null;
             }
         }
 

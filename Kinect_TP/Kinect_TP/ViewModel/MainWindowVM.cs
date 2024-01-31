@@ -20,21 +20,21 @@ namespace Kinect_TP.ViewModel
         /// Propriété liée à la commande appelée au démarrage de la page principale
         /// </summary>
       
-        public ICommand StartKinectCommand { get; set; }
-        public ICommand StopKinectCommand { get; set; }
-        public ICommand ColorImageStreamCommand {  get; set; }
-        public ICommand BodyImageStreamCommand { get; set; }
-        public ICommand IRImageStreamCommand { get; set; }
-        public ICommand DepthImageStreamCommand { get; set; }
-        public ICommand BodyAndColorImageStreamCommand { get; set; }
+        public ICommand StartKinectCommand { get; private set; }
+        public ICommand StopKinectCommand { get; private set; }
+        public ICommand ColorImageStreamCommand {  get; private set; }
+        public ICommand BodyImageStreamCommand { get; private set; }
+        public ICommand IRImageStreamCommand { get; private set; }
+        public ICommand DepthImageStreamCommand { get; private set; }
+        public ICommand BodyAndColorImageStreamCommand { get; private set; }
         
-        public KinectManager KinectManager { get; set; }
+        public KinectManager KinectManager { get; private set; }
 
         private bool isSecondViewboxVisible;
         public bool IsSecondViewboxVisible
         {
             get { return isSecondViewboxVisible; }
-            set
+            private set
             {
                 if (isSecondViewboxVisible != value)
                 {
@@ -48,13 +48,13 @@ namespace Kinect_TP.ViewModel
         /// <summary>
         /// Le Kinect streams factory pour la creation des streams.
         /// </summary>
-        public KinectStreamsFactory KinectStreamsFactory { get; set; }
+        public KinectStreamsFactory KinectStreamsFactory { get; private set; }
 
         public KinectStream kinectStream;
         public KinectStream kinectStream2; // Pour le BodyColor Ensemble
         public KinectStream KinectStream {
             get { return kinectStream; }
-            set
+            private set
             {
                 if (value != null)
                 {
@@ -66,7 +66,7 @@ namespace Kinect_TP.ViewModel
         public KinectStream KinectStream2
         {
             get { return kinectStream2; }
-            set
+            private set
             {
                 if (value != null)
                 {

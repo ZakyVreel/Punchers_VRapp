@@ -40,6 +40,7 @@ namespace Kinect_Utils
         public override ImageSource ImageSource
         {
             get { return this.bitmap; }
+
         }
 
         //ColorFrameReader va lire les trames de couleurs arrivant du kinect
@@ -93,7 +94,7 @@ namespace Kinect_Utils
                 // Dispose du lecteur pour libérer les ressources.
                 // Si nous ne le faisons pas manuellement, le GC le fera pour nous, mais nous ne savons pas quand.
                 this.colorFrameReader.Dispose();
-                this.colorFrameReader = null;
+                //this.colorFrameReader = null;
             }
         }
 
