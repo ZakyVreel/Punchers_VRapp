@@ -20,6 +20,8 @@ namespace Kinect_Utils
     {
         // Le bitmap pour le binding dans MainWindow.xaml
         private WriteableBitmap bitmap = null;
+
+        // image matricielle/grille de pixels, chaque pixel dans un bitmap contient des informations sur la couleur de l'image à cet emplacement spécifique
         public WriteableBitmap Bitmap
         {
             get { return bitmap; }
@@ -40,7 +42,7 @@ namespace Kinect_Utils
             get { return this.bitmap; }
         }
 
-        //ColorFrameReader va lire les trames de couleurs arrivent du kinect
+        //ColorFrameReader va lire les trames de couleurs arrivant du kinect
         private ColorFrameReader colorFrameReader;
 
 
@@ -49,9 +51,13 @@ namespace Kinect_Utils
         /// </summary>
         public ColorImageStream(KinectManager kinectSensor) : base(kinectSensor)
         {
+            // propriétés de la trame couleur
             FrameDescription colorFrameDescription = this.Sensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Rgba);
 
+            // traiter l'image couleur capturée
             //On on prends les pixelWidht, pixelHeight, le DPIHorizontale et DPIVerticale , ensuite le format qu'on veut
+            // PixelFormats.Bgra32 spécifie le format des pixels dans la bitmap -> format 32 bits par pixel avec les canaux de couleur Blue, Green, Red, Alpha.
+            // 96, 96 représentent le DPI (densité de points) horizontal et vertical
             this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96, 96, PixelFormats.Bgra32, null);
         }
 
