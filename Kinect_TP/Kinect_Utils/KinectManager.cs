@@ -10,10 +10,18 @@ namespace Kinect_TP
     public class KinectManager : ObservableObject
     {
         // Le capteur Kinect par défaut
-        public KinectSensor kinectSensor = KinectSensor.GetDefault();
+        private KinectSensor kinectSensor = KinectSensor.GetDefault();
+
+        public KinectSensor KinectSensor
+        {
+            get
+            {
+                return this.kinectSensor;
+            }
+        }
 
         // Le texte d'état du capteur Kinect
-        public string? statusText;
+        private string? statusText;
 
         /// <summary>
         /// Propriété représentant le texte d'état du capteur Kinect. Utilisé pour la liaison de données.
@@ -21,7 +29,7 @@ namespace Kinect_TP
         public string? StatusText
         {
             get { return statusText; }
-            set
+            private set
             {
                 if (value != null)
                 {
@@ -39,7 +47,7 @@ namespace Kinect_TP
         public bool Status
         {
             get { return status; }
-            set
+            private set
             {
                 SetProperty(ref status, value);
             }
