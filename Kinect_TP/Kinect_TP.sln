@@ -3,9 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinect_TP", "Kinect_TP\Kinect_TP.csproj", "{D7090CBF-B418-46AE-9E3E-CD4F2B927382}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kinect_TP", "Kinect_TP\Kinect_TP.csproj", "{D7090CBF-B418-46AE-9E3E-CD4F2B927382}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinect_Utils", "Kinect_Utils\Kinect_Utils.csproj", "{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kinect_Utils", "Kinect_Utils\Kinect_Utils.csproj", "{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinect_Gesture", "Kinect_Gesture\Kinect_Gesture.csproj", "{09C6BDBD-F010-415C-B87B-E46FAD0BB594}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24} = {2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestureTester", "GestureTester\GestureTester.csproj", "{5D8D0A66-AD9B-4BDB-A4BF-D2036E51C832}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyGesturesBank", "MyGesturesBank\MyGesturesBank.csproj", "{20C5F1AD-F050-4A47-8810-F4BFEAF90621}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +30,18 @@ Global
 		{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B95BFBC-1BAB-4ECB-9D5C-16BEC4985C24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C6BDBD-F010-415C-B87B-E46FAD0BB594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C6BDBD-F010-415C-B87B-E46FAD0BB594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C6BDBD-F010-415C-B87B-E46FAD0BB594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C6BDBD-F010-415C-B87B-E46FAD0BB594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D8D0A66-AD9B-4BDB-A4BF-D2036E51C832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D8D0A66-AD9B-4BDB-A4BF-D2036E51C832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D8D0A66-AD9B-4BDB-A4BF-D2036E51C832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D8D0A66-AD9B-4BDB-A4BF-D2036E51C832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C5F1AD-F050-4A47-8810-F4BFEAF90621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C5F1AD-F050-4A47-8810-F4BFEAF90621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C5F1AD-F050-4A47-8810-F4BFEAF90621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C5F1AD-F050-4A47-8810-F4BFEAF90621}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
