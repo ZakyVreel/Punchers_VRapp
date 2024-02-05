@@ -14,4 +14,10 @@
 	  <PackageReference Include="Microsoft.Kinect" Version="2.0.1410.19000" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Kinect_Gesture\Kinect_Gesture.csproj" />
+	  <ProjectReference Include="..\Kinect_Utils\Kinect_Utils.csproj" />
+	  <ProjectReference Include="..\MyGesturesBank\MyGesturesBank.csproj" />
+	</ItemGroup>
+
 </Project>
