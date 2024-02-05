@@ -1,0 +1,9 @@
+﻿<Application x:Class="Punchers.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Punchers"
+             StartupUri="View/Punchers.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

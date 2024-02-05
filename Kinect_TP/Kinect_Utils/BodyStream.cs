@@ -47,7 +47,6 @@
 
         public BodyStream(KinectManager kinectSensor) : base(kinectSensor)
         {
-
             this.InitializeKinect();
             this.InitializeDrawingObjects();
         }
