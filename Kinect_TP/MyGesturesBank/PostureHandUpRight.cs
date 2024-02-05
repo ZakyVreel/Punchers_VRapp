@@ -27,8 +27,16 @@ namespace MyGesturesBank
 
         protected override bool TestPosture(Body body)
         {
-            // Tester si la main droite est au même niveau de l'epoule
-            return body.Joints[JointType.HandRight].Position.Y == body.Joints[JointType.ShoulderRight].Position.Y;
+            // Obtenir les positions des joints de la main droite et de l'épaule droite
+            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandLeft].Position;
+            CameraSpacePoint rightShoulderPosition = body.Joints[JointType.ShoulderLeft].Position;
+
+            // Définir une marge de 10 pixels
+            float margin = 10f;
+
+            // Tester si la main droite est dans une plage de 10 pixels autour de l'épaule droite en Y
+            // Abs: valeur abslout : Si cette différence est inférieure ou égale à la marge définie (10 pixels), la condition est vraie
+            return Math.Abs(rightHandPosition.Y - rightShoulderPosition.Y) <= margin;
         }
     }
 }
