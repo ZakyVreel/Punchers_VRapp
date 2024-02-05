@@ -10,51 +10,33 @@ namespace GestureTester
 {
     public class Program
     {
-        private static List<Tuple<JointType, JointType>> bones = new List<Tuple<JointType, JointType>>();
-
         static void Main(string[] args)
         {
-            // Create a body
-            Body[] body = new Body[1];
-
-            // Create a posture
+            // On crée les postures
             PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
             PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
 
-            // Make the body do the posture
-            bones.Add(new Tuple<JointType, JointType>(JointType.Head, JointType.Neck));
-            bones.Add(new Tuple<JointType, JointType>(JointType.Neck, JointType.SpineShoulder));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineShoulder, JointType.SpineMid));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineMid, JointType.SpineBase));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineShoulder, JointType.ShoulderRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineShoulder, JointType.ShoulderLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineBase, JointType.HipRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.SpineBase, JointType.HipLeft));
+            // Simuler un corps avec des positions de joints
+            Body simulatedBody = SimulateBody();
 
-            // Bras droit 
-            bones.Add(new Tuple<JointType, JointType>(JointType.ShoulderRight, JointType.ElbowRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.ElbowRight, JointType.WristRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.WristRight, JointType.HandRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.HandRight, JointType.HandTipRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.WristRight, JointType.ThumbRight));
+            // On simule la posture souhaitée
+            postureHandUpRight.TestGesture(simulatedBody);
 
-            // Bras gauche
-            bones.Add(new Tuple<JointType, JointType>(JointType.ShoulderLeft, JointType.ElbowLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.ElbowLeft, JointType.WristLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.WristLeft, JointType.HandLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.HandLeft, JointType.HandTipLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.WristLeft, JointType.ThumbLeft));
+            // On teste la posture
+            // Souscrire à l'événement GestureRecognized
+            postureHandUpRight.GestureRecognized += (sender, e) =>
+            {
+                Console.WriteLine($"La posture de {e.GestureName} a été reconnue.");
+            };
+        }
 
-            // Jambe droite
-            bones.Add(new Tuple<JointType, JointType>(JointType.HipRight, JointType.KneeRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.KneeRight, JointType.AnkleRight));
-            bones.Add(new Tuple<JointType, JointType>(JointType.AnkleRight, JointType.FootRight));
+        private static Body SimulateBody()
+        {
+            Body [] body = new Body[1];
 
-            // Jambe gauche
-            bones.Add(new Tuple<JointType, JointType>(JointType.HipLeft, JointType.KneeLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.KneeLeft, JointType.AnkleLeft));
-            bones.Add(new Tuple<JointType, JointType>(JointType.AnkleLeft, JointType.FootLeft));
+            //body[0].Joints[JointType.Head] = new Joint { Position = new CameraSpacePoint { X = 0, Y = 0, Z = 0 } };
 
+            return body[0];
         }
     }
 }
