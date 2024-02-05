@@ -1,7 +1,9 @@
 ﻿using Kinect_TP;
+using Microsoft.Kinect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,28 +11,104 @@ namespace Kinect_Gesture
 {
     public static class GestureManager
     {
-        // Properties
-        public static KinectManager KinectManager { get; set; } = new KinectManager();
+        public static KinectManager KinectManager { get; set; }
 
-        public static IEnumerable<BaseGesture> KnownGestures { get; private set; } = new List<BaseGesture>();
+        public static List<BaseGesture> KnownGestures { get; private set; } = new List<BaseGesture>();
 
-        // <GestureRecognizedEventArgs>
-        public static EventHandler GestureRecognized { get; set; }
+        private static event EventHandler<GestureRecognizedEventArgs> gestureRecognized;
+        public static event EventHandler<GestureRecognizedEventArgs> GestureRecognized
+        {
+            add
+            {
+                if (gestureRecognized == null || !gestureRecognized.GetInvocationList().Contains(value))
+                {
+                    gestureRecognized += value;
+                }
+            }
+            remove
+            {
+                gestureRecognized -= value;
+            }
+        }
 
-        public static IGestureFactory Factory { get; set; }
+        private static BodyFrameReader bodyFrameReader;
 
         public static void AddGestures(IGestureFactory factory)
         {
-            throw new NotImplementedException();
+            foreach (BaseGesture gesture in factory.CreateGestures())
+            {
+                AddGesture(gesture);
+            }
         }
 
-        public static void AddGestures(BaseGesture[] baseGestures) { throw new NotImplementedException(); }
+        public static void AddGestures(params BaseGesture[] baseGestures)
+        {
+            foreach (BaseGesture baseGesture in baseGestures)
+            {
+                AddGesture(baseGesture);
+            }
+        }
 
-        public static void RemoveGesture(BaseGesture baseGesture) { throw new NotImplementedException(); }
+        public static void AddGesture(BaseGesture baseGesture)
+        {
+            //verifier si élément déjà présent ou non 
+            KnownGestures.Add(baseGesture);
+            baseGesture.GestureRecognized += Gesture_GestureRecognized;
+        }
 
-        public static void StartAcquiringFrames(KinectManager manager) { throw new NotImplementedException(); }
+        public static void RemoveGesture(BaseGesture baseGesture)
+        {
+            KnownGestures.Remove(baseGesture);
+            baseGesture.GestureRecognized -= Gesture_GestureRecognized;
+        }
 
-        public static void StopAcquiringFrame(KinectManager manager) { throw new NotImplementedException(); }
+        public static void StartAcquiringFrames(KinectManager manager)
+        {
+            if (bodyFrameReader == null)
+            {
+                KinectManager = manager;
+                KinectManager.StartSensor();
+                bodyFrameReader = KinectManager.KinectSensor.BodyFrameSource.OpenReader();
+                bodyFrameReader.FrameArrived += Reader_FrameArrivedBody;
+            }
+        }
+
+        public static void StopAcquiringFrame()
+        {
+            if (bodyFrameReader != null)
+            {
+                KinectManager.StopSensor();
+                bodyFrameReader.FrameArrived -= Reader_FrameArrivedBody;
+                bodyFrameReader?.Dispose();
+                bodyFrameReader = null;
+            }
+        }
+
+        private static void Reader_FrameArrivedBody(object sender, BodyFrameArrivedEventArgs e)
+        {
+            using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
+            {
+                if (bodyFrame != null)
+                {
+                    Body[] bodies = new Body[bodyFrame.BodyCount];
+                    bodyFrame.GetAndRefreshBodyData(bodies);
+                    foreach (var body in bodies)
+                    {
+                        if (body != null && body.IsTracked)
+                        {
+                            foreach (BaseGesture currentGesture in KnownGestures)
+                            {
+                                currentGesture.TestGesture(body);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private static void Gesture_GestureRecognized(object sender, GestureRecognizedEventArgs e)
+        {
+            gestureRecognized?.Invoke(sender, e);
+        }
 
     }
 }

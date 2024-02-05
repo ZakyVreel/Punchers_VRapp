@@ -9,7 +9,7 @@ namespace Kinect_Gesture
     /// <summary>
     /// le gesture recognized event args.
     /// </summary>
-    public class GestureRecognizedEventArgs
+    public class GestureRecognizedEventArgs : EventArgs
     {
         /// <summary>
         /// Le nom du geste
