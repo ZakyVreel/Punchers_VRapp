@@ -17,14 +17,6 @@ namespace MyGesturesBank
             GestureName = "HandUpRight";
         }
 
-        public override void TestGesture(Body body)
-        {
-            if (TestPosture(body))
-            {
-                OnGestureRecognized();
-            }
-        }
-
         protected override bool TestPosture(Body body)
         {
             // Obtenir les positions des joints de la main droite et de l'épaule droite
