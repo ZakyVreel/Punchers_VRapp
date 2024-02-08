@@ -1,4 +1,5 @@
-﻿using Microsoft.Kinect;
+﻿using Kinect_Gesture;
+using Microsoft.Kinect;
 using MyGesturesBank;
 using System;
 using System.Collections.Generic;
@@ -10,33 +11,68 @@ namespace GestureTester
 {
     public class Program
     {
+        private static KinectSensor kinectSensor;
+
+        private static PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
+        private static PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
         static void Main(string[] args)
         {
+            
+            kinectSensor = KinectSensor.GetDefault();
+
             // On crée les postures
-            PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
-            PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
+            postureHandUpRight.GestureRecognized += PostureHandUpRight_GestureRecognized;
 
-            // Simuler un corps avec des positions de joints
-            Body simulatedBody = SimulateBody();
-
-            // On simule la posture souhaitée
-            postureHandUpRight.TestGesture(simulatedBody);
-
-            // On teste la posture
-            // Souscrire à l'événement GestureRecognized
-            postureHandUpRight.GestureRecognized += (sender, e) =>
+            if (kinectSensor != null)
             {
-                Console.WriteLine($"La posture de {e.GestureName} a été reconnue.");
-            };
+                kinectSensor.Open();
+
+                // Utilisation du bloc using pour bodyFrameReader
+                using (var bodyFrameReader = kinectSensor.BodyFrameSource.OpenReader())
+                {
+                    if (bodyFrameReader != null)
+                    {
+                        // Abonnement à l'événement FrameArrived
+                        bodyFrameReader.FrameArrived += BodyFrameReader_FrameArrived;
+
+                        Console.WriteLine("Lecture des données du corps en cours... Appuyez sur une touche pour quitter.");
+                        Console.ReadKey();
+                    }
+                }
+            }
+
+            if (kinectSensor != null)
+            {
+                kinectSensor.Close();
+                kinectSensor = null;
+            }
+
+
         }
 
-        private static Body SimulateBody()
+        private static void PostureHandUpRight_GestureRecognized(object sender, GestureRecognizedEventArgs e)
         {
-            Body [] body = new Body[1];
-
-            //body[0].Joints[JointType.Head] = new Joint { Position = new CameraSpacePoint { X = 0, Y = 0, Z = 0 } };
-
-            return body[0];
+            Console.WriteLine("Posture Hand Up Right a été reconnue !");
         }
+        private static void BodyFrameReader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
+        {
+            using (var bodyFrame = e.FrameReference.AcquireFrame())
+            {
+                if (bodyFrame != null)
+                {
+                    Body[] bodies = new Body[bodyFrame.BodyCount];
+                    bodyFrame.GetAndRefreshBodyData(bodies);
+
+                    foreach (Body body in bodies)
+                    {
+                        if (body.IsTracked)
+                        {
+                            postureHandUpRight.TestGesture(body);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
