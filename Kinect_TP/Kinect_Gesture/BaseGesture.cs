@@ -25,7 +25,7 @@ namespace Kinect_Gesture
         /// <summary>
         /// L'event pour identifier le geste.
         /// </summary>
-        public EventHandler<GestureRecognizedEventArgs> GestureRecognized { get; set; }
+        public event EventHandler<GestureRecognizedEventArgs> GestureRecognized;
 
         /// <summary>
         /// Les teste gesture.

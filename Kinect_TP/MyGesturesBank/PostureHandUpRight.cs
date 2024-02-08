@@ -28,8 +28,8 @@ namespace MyGesturesBank
         protected override bool TestPosture(Body body)
         {
             // Obtenir les positions des joints de la main droite et de l'épaule droite
-            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandLeft].Position;
-            CameraSpacePoint rightShoulderPosition = body.Joints[JointType.ShoulderLeft].Position;
+            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
+            CameraSpacePoint rightShoulderPosition = body.Joints[JointType.ShoulderRight].Position;
 
             // Définir une marge de 10 pixels
             float margin = 10f;
