@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:Punchers"
         mc:Ignorable="d"
         Title="Punchers" Height="450" Width="800">
+
     <Grid>
-        
+        <!-- Utilisez un ImageBrush pour définir l'image en arrière-plan -->
+        <Grid.Background>
+            <ImageBrush ImageSource="/images/background.jpg" />
+        </Grid.Background>
+
+        <Grid>
+            <!-- Texte à trembler -->
+            <TextBlock Text="Boxe posture to start the game" 
+                    Style="{StaticResource TremblingTextBlockStyle}" />
+            
+        </Grid>
     </Grid>
 </Window>
