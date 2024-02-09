@@ -13,8 +13,9 @@ namespace Kinect_Gesture
         {
             return new List<BaseGesture>
             {
-                new PostureHandUpLeft(),
-                new PostureHandUpRight(),
+                //new PostureHandUpLeft(),
+                //new PostureHandUpRight(),
+                new BoxePosture()
             };
         }
     }

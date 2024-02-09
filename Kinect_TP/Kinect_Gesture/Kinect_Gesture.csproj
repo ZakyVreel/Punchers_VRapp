@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseGesture.cs" />
+    <Compile Include="Gesture.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureRecognizedEventArgs.cs" />
     <Compile Include="IGestureFactory.cs" />

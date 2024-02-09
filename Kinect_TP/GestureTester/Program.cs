@@ -1,4 +1,5 @@
 ﻿using Kinect_Gesture;
+using Kinect_TP;
 using Microsoft.Kinect;
 using MyGesturesBank;
 using System;
@@ -15,13 +16,43 @@ namespace GestureTester
 
         private static PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
         private static PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
+        private static BoxePosture postureBoxe = new BoxePosture();
         static void Main(string[] args)
         {
-            
+            //TestConsolePosture();
+            TestConsoleGestureManager();
+
+        }
+
+        private static void TestConsoleGestureManager()
+        {
+            // Créer une instance de KinectManager (vous devrez peut-être ajuster ceci selon votre implémentation)
+            KinectManager kinectManager = new KinectManager();
+
+            // Ajouter des gestes à la liste des gestes connus
+            GestureManager.AddGestures(new BoxingGestureFactory());
+
+            // Démarrer l'acquisition de trames
+            GestureManager.StartAcquiringFrames(kinectManager);
+
+            // Abonnez-vous à l'événement GestureRecognized
+            GestureManager.GestureRecognized += GestureManager_GestureRecognized;
+
+            Console.WriteLine("Appuyez sur une touche pour quitter.");
+            Console.ReadKey();
+
+            // Arrêter l'acquisition de trames lorsque l'application se termine
+            GestureManager.StopAcquiringFrame();
+        }
+
+        private static void TestConsolePosture()
+        {
             kinectSensor = KinectSensor.GetDefault();
 
             // On crée les postures
-            postureHandUpRight.GestureRecognized += PostureHandUpRight_GestureRecognized;
+            //postureHandUpRight.GestureRecognized += PostureHandUpRight_GestureRecognized;
+            postureBoxe.PostureRecognized += PostureBoxe_GestureRecognized;
+            //postureBoxe.PostureUnrecognized += PostureBoxe_GestureUnrecognized;
 
             if (kinectSensor != null)
             {
@@ -46,9 +77,17 @@ namespace GestureTester
                 kinectSensor.Close();
                 kinectSensor = null;
             }
-
-
         }
+
+        private static void PostureBoxe_GestureRecognized(object sender, EventArgs e)
+        {
+            Console.WriteLine("Posture Boxe a été reconnue !");
+        }
+
+        //private static void PostureBoxe_GestureUnrecognized(object sender, EventArgs e)
+        //{
+        //    Console.WriteLine("Posture Boxe n'a pas été reconnue !");
+        //}
 
         private static void PostureHandUpRight_GestureRecognized(object sender, GestureRecognizedEventArgs e)
         {
@@ -67,11 +106,18 @@ namespace GestureTester
                     {
                         if (body.IsTracked)
                         {
-                            postureHandUpRight.TestGesture(body);
+                            //postureHandUpRight.TestGesture(body);
+                            postureBoxe.TestGesture(body);
                         }
                     }
                 }
             }
+        }
+
+        private static void GestureManager_GestureRecognized(object sender, GestureRecognizedEventArgs e)
+        {
+            // Gestionnaire d'événements pour la reconnaissance de gestes
+            Console.WriteLine($"Geste reconnu : {e.GestureName}");
         }
 
     }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxingGestureFactory.cs" />
+    <Compile Include="BoxePosture.cs" />
     <Compile Include="PostureHandUpLeft.cs" />
     <Compile Include="PostureHandUpRight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
