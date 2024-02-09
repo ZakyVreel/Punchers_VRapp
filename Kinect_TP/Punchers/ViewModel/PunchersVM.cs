@@ -23,11 +23,6 @@ namespace Punchers.ViewModel
         public ICommand StartAcqueringFramesCommand { get; private set; }
         public ICommand StopAcqueringFramesCommand { get; private set; }
 
-        //Le timer pour l'adversaire
-        private readonly DispatcherTimer enemyTimer = new DispatcherTimer();
-        private bool movingRight = true;
-
-        private double enemyPositionX;
 
         private string enemyImagePath = "/images/enemy-stand.png";
         public string EnemyImagePath
@@ -46,13 +41,9 @@ namespace Punchers.ViewModel
             StartAcqueringFramesCommand = new RelayCommand(StartAcqueringFrames);
             StopAcqueringFramesCommand = new RelayCommand(StopAcqueringFrames);
 
-            enemyTimer.Interval = TimeSpan.FromSeconds(1);
-            enemyTimer.Tick += EnemyTimer_Tick;
-            enemyTimer.Start();
 
             GestureManager.GestureRecognized += GestureManager_GestureReco;
             StartTextVisibility = Visibility.Visible;
-
 
         }
 
@@ -66,31 +57,6 @@ namespace Punchers.ViewModel
             GestureManager.StopAcquiringFrame();
         }
 
-        private void EnemyTimer_Tick(object sender, EventArgs e)
-        {
-            // Déplacer l'adversaire
-            if (movingRight)
-            {
-                enemyPositionX += 10; // Ajustez la vitesse de déplacement ici
-            }
-            else
-            {
-                enemyPositionX -= 10; // Ajustez la vitesse de déplacement ici
-            }
-
-            // Changer de direction si nécessaire
-            if (enemyPositionX >= 800 - 50) // Largeur de la fenêtre - Largeur de l'adversaire
-            {
-                movingRight = false;
-            }
-            else if (enemyPositionX <= 0)
-            {
-                movingRight = true;
-            }
-
-            // Appliquez la nouvelle position
-            //EnemyImagePath = $"/images/enemy-stand.png"; // Mettez à jour le chemin de l'image de l'adversaire
-        }
 
         private void GestureManager_GestureReco(object sender, GestureRecognizedEventArgs e)
         {
