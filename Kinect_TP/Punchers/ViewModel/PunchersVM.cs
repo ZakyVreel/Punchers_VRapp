@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Punchers.ViewModel
@@ -19,6 +20,7 @@ namespace Punchers.ViewModel
         public ICommand StartAcqueringFramesCommand { get; private set; }
         public ICommand StopAcqueringFramesCommand { get; private set; }
 
+        public Visibility StartTextVisibility { get; private set; }
 
 
 
@@ -30,6 +32,10 @@ namespace Punchers.ViewModel
             StartAcqueringFramesCommand = new RelayCommand(StartAcqueringFrames);
             StopAcqueringFramesCommand = new RelayCommand(StopAcqueringFrames);
 
+            GestureManager.GestureRecognized += GestureManager_GestureReco;
+            StartTextVisibility = Visibility.Visible;
+
+
         }
 
         private void StartAcqueringFrames()
@@ -40,6 +46,18 @@ namespace Punchers.ViewModel
         private void StopAcqueringFrames()
         {
             GestureManager.StopAcquiringFrame();
+        }
+
+
+        private void GestureManager_GestureReco(object sender, GestureRecognizedEventArgs e)
+        {
+            switch (e.GestureName)
+            {
+                case "BoxePosture":
+                    // Mettre à jour la visibilité du texte
+                    StartTextVisibility = Visibility.Hidden;
+                    break;
+            }
         }
     }
 }

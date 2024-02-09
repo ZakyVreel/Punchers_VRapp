@@ -16,7 +16,8 @@
         <Grid>
             <!-- Texte à trembler -->
             <TextBlock Text="Boxe posture to start the game" 
-                    Style="{StaticResource TremblingTextBlockStyle}" />
+                    Style="{StaticResource TremblingTextBlockStyle}" 
+                    Visibility="{Binding StartTextVisibility}" />
             
         </Grid>
     </Grid>
