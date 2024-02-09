@@ -28,7 +28,7 @@ namespace MyGesturesBank
 
             // Tester si la main droite est dans une plage de 10 pixels autour de l'épaule droite en Y
             // Abs: valeur abslout : Si cette différence est inférieure ou égale à la marge définie (10 pixels), la condition est vraie
-            return Math.Abs(rightHandPosition.Y - rightShoulderPosition.Y) <= margin;
+            return body.Joints[JointType.HandRight].Position.Y > body.Joints[JointType.ShoulderRight].Position.Y;
         }
     }
 }

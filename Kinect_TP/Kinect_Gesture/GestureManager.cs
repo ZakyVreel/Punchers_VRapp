@@ -11,6 +11,8 @@ namespace Kinect_Gesture
 {
     public static class GestureManager
     {
+
+        private static bool isAcquiringFrame;
         public static KinectManager KinectManager { get; set; }
 
         public static List<BaseGesture> KnownGestures { get; private set; } = new List<BaseGesture>();
@@ -64,23 +66,25 @@ namespace Kinect_Gesture
 
         public static void StartAcquiringFrames(KinectManager manager)
         {
-            if (bodyFrameReader == null)
+            if (!isAcquiringFrame)
             {
                 KinectManager = manager;
                 KinectManager.StartSensor();
                 bodyFrameReader = KinectManager.KinectSensor.BodyFrameSource.OpenReader();
                 bodyFrameReader.FrameArrived += Reader_FrameArrivedBody;
+                isAcquiringFrame = true;
             }
         }
 
         public static void StopAcquiringFrame()
         {
-            if (bodyFrameReader != null)
+            if (isAcquiringFrame)
             {
                 KinectManager.StopSensor();
                 bodyFrameReader.FrameArrived -= Reader_FrameArrivedBody;
                 bodyFrameReader?.Dispose();
                 bodyFrameReader = null;
+                isAcquiringFrame = false;
             }
         }
 
