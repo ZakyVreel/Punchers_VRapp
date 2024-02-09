@@ -14,6 +14,9 @@ namespace Kinect_Gesture
     {
         public event EventHandler PostureRecognized;
         public event EventHandler PostureUnrecognized;
+
+        private bool isPostureRecognized = false;
+
         /// <summary>
         /// Tests pour le posture.
         /// </summary>
@@ -24,23 +27,31 @@ namespace Kinect_Gesture
         {
             if (TestPosture(body))
             {
-                OnGestureRecognized();
-                OnPostureRecognized();
+                if (!isPostureRecognized)
+                {
+                    OnGestureRecognized();
+                    OnPostureRecognized();
+                    isPostureRecognized = true;
+
+                }
             }
             else
             {
                 OnPostureUnrecognized();
+                isPostureRecognized = false;
             }
         }
 
         private void OnPostureRecognized()
         {
+
             PostureRecognized?.Invoke(this, EventArgs.Empty);
+            
         }
 
         private void OnPostureUnrecognized()
         {
-            PostureUnrecognized?.Invoke(this, EventArgs.Empty);
+            PostureUnrecognized?.Invoke(this, EventArgs.Empty); 
         }
     }
 }
