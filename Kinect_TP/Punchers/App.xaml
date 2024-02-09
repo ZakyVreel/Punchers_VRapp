@@ -30,5 +30,34 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="Image" x:Key="MovingEnemy">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform X="0" Y="0"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <!-- Animation pour déplacer l'image vers la gauche pendant 3 secondes -->
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                    From="0" To="-100" Duration="0:0:2"/>
+ 
+                            <!-- Animation pour déplacer l'image vers la droite pendant 3 secondes -->
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                    From="-100" To="100" BeginTime="0:0:2" Duration="0:0:4"/>
+
+                            <!-- Animation pour déplacer l'image vers de la droite vers le centre -->
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                            From="100" To="0" BeginTime="0:0:6" Duration="0:0:2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Application.Resources>
 </Application>

@@ -14,11 +14,31 @@
         </Grid.Background>
 
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <!-- Texte à trembler -->
-            <TextBlock Text="Boxe posture to start the game" 
+            <!--  <TextBlock Text="Boxe posture to start the game" 
                     Style="{StaticResource TremblingTextBlockStyle}" 
-                    Visibility="{Binding StartTextVisibility}" />
-            
-        </Grid>
+                    Visibility="{Binding StartTextVisibility}" /> -->
+
+            <!-- La vie des players -->
+            <ProgressBar Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50,0,0,50" Width="250" Height="25"></ProgressBar>
+            <ProgressBar Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,50,50" Width="250" Height="25"></ProgressBar>
+
+
+            <!-- L'adversaire-->
+            <Image Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Width="50" Source="{Binding EnemyImagePath}" Style="{StaticResource MovingEnemy}"/>
+            <!-- Le boxer -->
+            <Image Grid.Row="2" Grid.Column="1" Source="/images/boxer-stand.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        </Grid> 
     </Grid>
 </Window>

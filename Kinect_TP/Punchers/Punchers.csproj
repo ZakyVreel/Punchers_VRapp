@@ -11,10 +11,42 @@
 
 	<ItemGroup>
 	  <None Remove="images\background.jpg" />
+	  <None Remove="images\boxer-block.png" />
+	  <None Remove="images\boxer-left-punch.png" />
+	  <None Remove="images\boxer-right-punch.png" />
+	  <None Remove="images\boxer-stand.png" />
+	  <None Remove="images\enemy-block.png" />
+	  <None Remove="images\enemy-punch1.png" />
+	  <None Remove="images\enemy-punch2.png" />
+	  <None Remove="images\enemy-stand.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="images\background.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\boxer-block.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\boxer-left-punch.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\boxer-right-punch.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\boxer-stand.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\enemy-block.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\enemy-punch1.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\enemy-punch2.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="images\enemy-stand.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
