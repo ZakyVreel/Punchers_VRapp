@@ -8,17 +8,16 @@
         Title="Punchers" Height="450" Width="800">
 
     <Grid>
-            <!-- Utilisez un ImageBrush pour définir l'image en arrière-plan -->
-            <Grid.Background>
-                <ImageBrush ImageSource="/images/background.jpg" />
-            </Grid.Background>
+        <!-- Utilisez un ImageBrush pour définir l'image en arrière-plan -->
+        <Grid.Background>
+            <ImageBrush ImageSource="/images/background.jpg" />
+        </Grid.Background>
 
-            <Grid>
-                <!-- Texte à trembler -->
+        <Grid>
+            <!-- Texte à trembler -->
             <TextBlock Text="Boxe posture to start the game" 
-                       Style="{StaticResource TremblingTextBlockStyle}" />
-                
+                    Style="{StaticResource TremblingTextBlockStyle}" />
             
-            </Grid>
         </Grid>
+    </Grid>
 </Window>
