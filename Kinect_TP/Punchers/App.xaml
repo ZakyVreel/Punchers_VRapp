@@ -42,11 +42,11 @@
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard RepeatBehavior="Forever">
-                            <!-- Animation pour déplacer l'image vers la gauche pendant 3 secondes -->
+                            <!-- Animation pour déplacer l'image vers la gauche pendant 2 secondes -->
                             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                                     From="0" To="-100" Duration="0:0:2"/>
  
-                            <!-- Animation pour déplacer l'image vers la droite pendant 3 secondes -->
+                            <!-- Animation pour déplacer l'image vers la droite pendant 2 secondes -->
                             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                                     From="-100" To="100" BeginTime="0:0:2" Duration="0:0:4"/>
 
