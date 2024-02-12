@@ -50,6 +50,7 @@
     <Compile Include="PostureHandUpRight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RightPunchGesture.cs" />
+    <Compile Include="SwipeRightHand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kinect_Gesture\Kinect_Gesture.csproj">

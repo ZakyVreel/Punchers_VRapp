@@ -37,10 +37,12 @@ namespace Kinect_Gesture
 
         public static void AddGestures(IGestureFactory factory)
         {
-            foreach (BaseGesture gesture in factory.CreateGestures())
+            /*foreach (BaseGesture gesture in factory.CreateGestures())
             {
                 AddGesture(gesture);
-            }
+            }*/
+            var gestures = factory.CreateGestures().ToList();
+            KnownGestures.AddRange(gestures);
         }
 
         public static void AddGestures(params BaseGesture[] baseGestures)

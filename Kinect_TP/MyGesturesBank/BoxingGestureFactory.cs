@@ -9,15 +9,25 @@ namespace Kinect_Gesture
 {
     public class BoxingGestureFactory : IGestureFactory
     {
+        /// <summary>
+        /// Crée tout les baseGesture
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<BaseGesture> CreateGestures()
         {
-            return new List<BaseGesture>
-            {
-                //new PostureHandUpLeft(),
-                //new PostureHandUpRight(),
-                new BoxePosture(),
-                new RightPunchGesture()
-            };
+            //Postures
+            PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
+            PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
+            BoxePosture boxePosture = new BoxePosture();
+
+            //Gesture
+            RightPunchGesture rightPunchGesture = new RightPunchGesture();
+
+            BaseGesture[] gestures = new BaseGesture[5];
+            gestures[0] = boxePosture;
+            gestures[1] = rightPunchGesture;
+
+            return gestures;
         }
     }
 }
