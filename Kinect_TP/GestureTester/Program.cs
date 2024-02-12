@@ -17,29 +17,20 @@ namespace GestureTester
         private static PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
         private static PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
         private static BoxePosture postureBoxe = new BoxePosture();
+        private static RightPunchGesture gesturePunch = new RightPunchGesture();
+
+
         static void Main(string[] args)
         {
-            //TestConsolePosture();
-            //TestConsoleGestureManager();
-
-            RightPunchGesture punchGesture = new RightPunchGesture();
-
-            BaseGesture[] gestures = new BaseGesture[1];
-
-
-            GestureManager.AddGestures(gestures);
-
-            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
-
-            // Keep the program running until a key is pressed
-            Console.WriteLine("Appuyez sur une touche pour quitter.");
-            Console.ReadKey();
+            TestConsolePosture();
+            TestConsoleGestureManager();
+            //TestConsoleGesture();
 
         }
 
         private static void TestConsoleGestureManager()
         {
-            // Créer une instance de KinectManager (vous devrez peut-être ajuster ceci selon votre implémentation)
+            // Créer une instance de KinectManager 
             KinectManager kinectManager = new KinectManager();
 
             // Ajouter des gestes à la liste des gestes connus
@@ -48,7 +39,7 @@ namespace GestureTester
             // Démarrer l'acquisition de trames
             GestureManager.StartAcquiringFrames(kinectManager);
 
-            // Abonnez-vous à l'événement GestureRecognized
+            // Abonnez à l'événement GestureRecognized
             GestureManager.GestureRecognized += GestureManager_GestureRecognized;
 
             Console.WriteLine("Appuyez sur une touche pour quitter.");
@@ -63,9 +54,7 @@ namespace GestureTester
             kinectSensor = KinectSensor.GetDefault();
 
             // On crée les postures
-            //postureHandUpRight.GestureRecognized += PostureHandUpRight_GestureRecognized;
             postureBoxe.PostureRecognized += PostureBoxe_GestureRecognized;
-            //postureBoxe.PostureUnrecognized += PostureBoxe_GestureUnrecognized;
 
             if (kinectSensor != null)
             {
@@ -92,15 +81,51 @@ namespace GestureTester
             }
         }
 
+        private static void TestConsoleGesture()
+        {
+            kinectSensor = KinectSensor.GetDefault();
+
+            // On crée les postures
+            RightPunchGesture gesturePunch = new RightPunchGesture();
+            gesturePunch.GestureRecognized += GestureBoxe_GestureRecognized;
+
+            if (kinectSensor != null)
+            {
+                kinectSensor.Open();
+
+                // Utilisation du bloc using pour bodyFrameReader
+                using (var bodyFrameReader = kinectSensor.BodyFrameSource.OpenReader())
+                {
+                    if (bodyFrameReader != null)
+                    {
+                        // Abonnement à l'événement FrameArrived
+                        bodyFrameReader.FrameArrived += BodyFrameReader_FrameArrived;
+
+                        Console.WriteLine("Lecture des données du corps en cours... Appuyez sur une touche pour quitter.");
+                        Console.ReadKey();
+                    }
+                }
+            }
+
+            if (kinectSensor != null)
+            {
+                kinectSensor.Close();
+                kinectSensor = null;
+            }
+        }
+
+
+
         private static void PostureBoxe_GestureRecognized(object sender, EventArgs e)
         {
             Console.WriteLine("Posture Boxe a été reconnue !");
         }
 
-        //private static void PostureBoxe_GestureUnrecognized(object sender, EventArgs e)
-        //{
-        //    Console.WriteLine("Posture Boxe n'a pas été reconnue !");
-        //}
+        private static void GestureBoxe_GestureRecognized(object sender, EventArgs e)
+        {
+            Console.WriteLine("Gesture Boxe a été reconnue !");
+        }
+
 
         private static void PostureHandUpRight_GestureRecognized(object sender, GestureRecognizedEventArgs e)
         {
@@ -121,6 +146,7 @@ namespace GestureTester
                         {
                             //postureHandUpRight.TestGesture(body);
                             postureBoxe.TestGesture(body);
+                            //gesturePunch.TestGesture(body);
                         }
                     }
                 }

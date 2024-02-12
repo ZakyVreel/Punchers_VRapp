@@ -14,10 +14,14 @@ namespace MyGesturesBank
         private CameraSpacePoint lastRightHandPosition;
         private CameraSpacePoint lastRightElbowPosition;
 
+        private int recursionCount = 0;
+        private const int maxRecursionCount = 100;
+
         public RightPunchGesture()
         {
             MinNbOfFrames = 10;
             MaxNbOfFrames = 30;
+            GestureName = "Punch Right Gesture";
         }
 
         public override void TestGesture(Body body)
@@ -63,11 +67,9 @@ namespace MyGesturesBank
             bool handLeftInToleranceRange = leftHandPosition.Y >= minLeftY && leftHandPosition.Y <= maxLeftY;
 
             // Vérifier si la main droite est suffisamment proche de l'épaule droite en termes de coordonnée X
-            // bool handRightInXRange = Math.Abs(rightHandPosition.X - rightShoulderPosition.X) <= toleranceMargin;
             bool handRightInXRange = rightHandPosition.X >= minRightX && rightHandPosition.X <= maxRightX;
 
             // Vérifier si la main droite est suffisamment proche de l'épaule droite en termes de coordonnée X
-            // bool handLeftInXRange = Math.Abs(leftHandPosition.X - leftShoulderPosition.X) <= toleranceMargin;
             bool handLeftInXRange = leftHandPosition.X >= minLeftX && leftHandPosition.X <= maxLeftX;
 
             // Retourner true uniquement si la main droite est dans la plage autour de l'épaule droite et suffisamment proche en termes de coordonnée X
@@ -76,6 +78,12 @@ namespace MyGesturesBank
 
         protected override bool TestInitialConditions(Body body)
         {
+            if (recursionCount > maxRecursionCount)
+            {
+                // Condition de sortie de récursion pour éviter une boucle infinie
+                return false;
+            }
+
             CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
             CameraSpacePoint rightShoulderPosition = body.Joints[JointType.ShoulderRight].Position;
 
@@ -85,23 +93,33 @@ namespace MyGesturesBank
             // Vérifier si le bras droit est étendu
             bool isArmExtended = rightHandPosition.X > rightShoulderPosition.X;
 
+            // Incrémentez le compteur de récursion
+            recursionCount++;
+
             return isHandAtShoulderLevel && isArmExtended;
         }
 
         protected override bool TestPosture(Body body)
         {
-            // Récupérer les positions des joints nécessaires
-            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
-            CameraSpacePoint rightShoulderPosition = body.Joints[JointType.ShoulderRight].Position;
+            // Vérifiez d'abord les conditions initiales pour déclencher le geste
+            if (TestInitialConditions(body))
+            {
+                // Ensuite, vérifiez si la posture de punch est maintenue
+                if (TestPosture(body))
+                {
+                    // Enfin, vérifiez si le geste de punch est en cours d'exécution
+                    if (TestRunningGesture(body))
+                    {
+                        Console.WriteLine("Gesture reconnu, Right Punch");
+                        Thread.Sleep(1000);
+                        OnGestureRecognized();
+                        return true; // Ajoutez cette instruction pour retourner true lorsque le geste est reconnu
+                    }
+                }
+            }
 
-            // Vérifier si le bras droit est tendu (la main est plus avancée que l'épaule)
-            bool isArmExtended = rightHandPosition.Z < rightShoulderPosition.Z;
-
-            // Vérifier si la main droite est au même niveau que l'épaule droite selon l'axe Y
-            bool isHandAtShoulderLevel = Math.Abs(rightHandPosition.Y - rightShoulderPosition.Y) < 0.1f;
-
-            // Le geste de coup de poing est considéré comme valide si le bras est tendu et que la main est au même niveau que l'épaule
-            return isArmExtended && isHandAtShoulderLevel;
+            // Retournez false si le geste n'est pas reconnu dans tous les autres cas
+            return false;
         }
 
 
