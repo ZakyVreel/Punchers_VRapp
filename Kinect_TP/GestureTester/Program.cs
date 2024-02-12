@@ -20,7 +20,20 @@ namespace GestureTester
         static void Main(string[] args)
         {
             //TestConsolePosture();
-            TestConsoleGestureManager();
+            //TestConsoleGestureManager();
+
+            RightPunchGesture punchGesture = new RightPunchGesture();
+
+            BaseGesture[] gestures = new BaseGesture[1];
+
+
+            GestureManager.AddGestures(gestures);
+
+            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
+
+            // Keep the program running until a key is pressed
+            Console.WriteLine("Appuyez sur une touche pour quitter.");
+            Console.ReadKey();
 
         }
 

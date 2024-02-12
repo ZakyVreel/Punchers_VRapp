@@ -45,10 +45,7 @@ namespace Kinect_Gesture
 
         public static void AddGestures(params BaseGesture[] baseGestures)
         {
-            foreach (BaseGesture baseGesture in baseGestures)
-            {
-                AddGesture(baseGesture);
-            }
+            KnownGestures.AddRange(baseGestures);
         }
 
         public static void AddGesture(BaseGesture baseGesture)
