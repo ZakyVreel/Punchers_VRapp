@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyGesturesBank
 {
+    //Cette gesture n'est pas utilisé, c'est une gesture de coup de poing. (Je n'ai pas reussi à la faire fonctionner)
     public class RightPunchGesture : Gesture
     {
         private CameraSpacePoint lastRightHandPosition;
