@@ -20,16 +20,14 @@ namespace GestureTester
 
         static void Main(string[] args)
         {
-            //Decomenter ses 2 lignes pour tester la boxe posture
-            //TestConsolePosture();
-            //TestConsoleGestureManager();
 
-            SwipeRightHandGesture soccerShootGesture = new SwipeRightHandGesture();
-
+            // Créer une instance de la factory de gestes
             IGestureFactory factory = new BoxingGestureFactory();
 
+            // Ajouter les gestes créés par la factory au gestionnaire de gestes
             GestureManager.AddGestures(factory);
 
+            // Abonner à l'événement GestureRecognized pour chaque geste connu
             foreach (var gesture in GestureManager.KnownGestures)
             {
                 gesture.GestureRecognized += (sender, arg) =>
@@ -38,12 +36,15 @@ namespace GestureTester
                 };
             }
 
+            // Démarrer l'acquisition de trames
             GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
 
-            // Keep the program running until a key is pressed
-            Console.WriteLine("Press any key to exit...");
+            // Attendre l'appui sur une touche pour quitter
+            Console.WriteLine("Appuyez sur une touche pour quitter...");
             Console.ReadKey();
 
+            // Arrêter l'acquisition de trames lorsque l'application se termine
+            GestureManager.StopAcquiringFrame();
         }
 
         private static void TestConsoleGestureManager()
@@ -105,11 +106,6 @@ namespace GestureTester
         private static void PostureBoxe_GestureRecognized(object sender, EventArgs e)
         {
             Console.WriteLine("Posture Boxe a été reconnue !");
-        }
-
-        private static void GestureBoxe_GestureRecognized(object sender, EventArgs e)
-        {
-            Console.WriteLine("Gesture Boxe a été reconnue !");
         }
 
 

@@ -15,7 +15,7 @@ namespace Kinect_Gesture
 
         protected int MaxNbOfFrames;
 
-        private int mCurrentFrameCount;
+        protected int mCurrentFrameCount;
 
         protected abstract bool TestInitialConditions(Body body);
 
@@ -24,5 +24,34 @@ namespace Kinect_Gesture
         protected abstract bool TestRunningGesture(Body body);
 
         protected abstract bool TestEndConditions(Body body);
+
+        private bool isGestureRecognized = false;
+
+        public override void TestGesture(Body body)
+        {
+            if (IsTesting)
+            {
+                if (!isGestureRecognized)
+                {
+                    if (TestEndConditions(body))
+                    {
+                        OnGestureRecognized();
+                        IsTesting = false;
+                    }
+                    else if (!TestRunningGesture(body) && !TestPosture(body))
+                    {
+                        // Réinitialiser si les conditions du geste en cours ne sont pas remplies
+                        IsTesting = false;
+                    }
+                }
+                
+            }
+            else if (TestInitialConditions(body))
+            {
+                IsTesting = true;
+                isGestureRecognized = false;
+
+            }
+        }
     }
 }

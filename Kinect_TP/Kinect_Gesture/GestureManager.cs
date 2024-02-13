@@ -13,7 +13,7 @@ namespace Kinect_Gesture
     {
 
         private static bool isAcquiringFrame;
-        public static KinectManager KinectManager { get; set; }
+        public static KinectManager KinectManager { get; set; } = new KinectManager();
 
         public static List<BaseGesture> KnownGestures { get; private set; } = new List<BaseGesture>();
 
@@ -101,7 +101,8 @@ namespace Kinect_Gesture
                         {
                             foreach (BaseGesture currentGesture in KnownGestures)
                             {
-                                currentGesture.TestGesture(body);
+                                if(currentGesture !=  null)
+                                 currentGesture.TestGesture(body);
                             }
                         }
                     }

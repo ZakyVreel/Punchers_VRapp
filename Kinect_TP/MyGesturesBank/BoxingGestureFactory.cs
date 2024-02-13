@@ -21,11 +21,11 @@ namespace Kinect_Gesture
             BoxePosture boxePosture = new BoxePosture();
 
             //Gesture
-            RightPunchGesture rightPunchGesture = new RightPunchGesture();
+            SwipeRightHandGesture swipeRightHandGesture = new SwipeRightHandGesture();
 
-            BaseGesture[] gestures = new BaseGesture[5];
-            gestures[0] = boxePosture;
-            gestures[1] = rightPunchGesture;
+            BaseGesture[] gestures = new BaseGesture[2];
+            gestures[0] = swipeRightHandGesture;
+            gestures[1] = boxePosture;
 
             return gestures;
         }

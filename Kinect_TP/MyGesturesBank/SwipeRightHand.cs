@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyGesturesBank
@@ -11,7 +12,6 @@ namespace MyGesturesBank
     public class SwipeRightHandGesture : Gesture
     {
         private CameraSpacePoint previousRightHandPosition;
-        private int mCurrentFrameCount;
 
         public SwipeRightHandGesture()
         {
@@ -20,61 +20,61 @@ namespace MyGesturesBank
             GestureName = "Swipe Right Hand Gesture";
         }
 
-        public override void TestGesture(Body body)
-        {
-            if (IsTesting)
-            {
-                if (TestEndConditions(body))
-                {
-                    OnGestureRecognized();
-                    IsTesting = false;
-                }
-                else if (!TestRunningGesture(body))
-                {
-                    // Réinitialiser si les conditions du geste en cours ne sont pas remplies
-                    IsTesting = false;
-                }
-            }
-            else if (TestInitialConditions(body))
-            {
-                IsTesting = true;
-                mCurrentFrameCount = 0;
 
-            }
-        }
 
         protected override bool TestInitialConditions(Body body)
         {
             CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
-            CameraSpacePoint spineMidPosition = body.Joints[JointType.SpineMid].Position;
+            CameraSpacePoint headPosition = body.Joints[JointType.Head].Position;
+            CameraSpacePoint hipPosition = body.Joints[JointType.SpineBase].Position;
 
-            // Vérifiez si la main droite est au niveau du torse et fait un balayage vers la gauche
-            return rightHandPosition.Y >= spineMidPosition.Y && rightHandPosition.X < previousRightHandPosition.X;
+            // Vérifier si la main droite est entre la tête et le torse sur l'axe Y
+            bool isRightHandBetweenHeadAndHip = rightHandPosition.Y <= headPosition.Y && rightHandPosition.Y >= hipPosition.Y;
+
+            // Vérifier si la main droite est à une distance horizontale appropriée de la tête pour initier le geste
+            bool isRightHandForwardEnough = rightHandPosition.Z < headPosition.Z - 0.2f;
+
+            // Vérifier si la main droite se déplace vers la gauche
+            bool isMovingLeft = rightHandPosition.X < previousRightHandPosition.X;
+
+            // Démarrer la reconnaissance du geste si la main droite est suffisamment avancée vers l'avant et commence à se déplacer vers la gauche
+            return isRightHandBetweenHeadAndHip && isRightHandForwardEnough && isMovingLeft;
         }
 
         protected override bool TestPosture(Body body)
         {
-            // Aucune exigence spécifique de posture statique pour ce geste
-            return true;
+            // Obtenir les positions des joints nécessaires
+            CameraSpacePoint headPosition = body.Joints[JointType.Head].Position;
+            CameraSpacePoint hipPosition = body.Joints[JointType.SpineBase].Position;
+            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
+
+            // Vérifier si la main droite est entre la tête et le hip
+            bool isHandBetweenHeadAndHip = rightHandPosition.Y <= headPosition.Y && rightHandPosition.Y >= hipPosition.Y;
+
+            return isHandBetweenHeadAndHip;
         }
 
         protected override bool TestRunningGesture(Body body)
         {
-            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
+            CameraSpacePoint currentRightHandPosition = body.Joints[JointType.HandRight].Position;
 
-            // Vérifiez si la main droite fait un balayage vers la gauche
-            bool isSwipingLeft = rightHandPosition.X < previousRightHandPosition.X;
+            // Vérifier si la main droite se déplace vers la gauche (position actuelle moins que précédente)
+            bool isMovingLeft = currentRightHandPosition.X < previousRightHandPosition.X;
 
-            // Mettre à jour la position précédente de la main pour la prochaine frame
-            previousRightHandPosition = rightHandPosition;
+            // Mettre à jour la position précédente de la main droite pour la prochaine frame
+            previousRightHandPosition = currentRightHandPosition;
 
-            return isSwipingLeft;
+            return isMovingLeft;
         }
 
         protected override bool TestEndConditions(Body body)
         {
-            // Vérifiez si le geste a été effectué pendant le nombre de frames requis
-            return mCurrentFrameCount >= MinNbOfFrames && mCurrentFrameCount <= MaxNbOfFrames;
+            CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
+            CameraSpacePoint leftHipPosition = body.Joints[JointType.HipLeft].Position;
+
+            // Vérifier si la main droite a dépassé la position horizontale du hip gauche
+            return rightHandPosition.X > leftHipPosition.X;
         }
+
     }
 }
