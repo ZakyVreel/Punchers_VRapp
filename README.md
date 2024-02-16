@@ -19,7 +19,7 @@ Sommaire
 
 ## Branch 🚨
 
-La branch a été noté pour l'ensemble des TP est la branch `master`
+La branch à être noté pour l'ensemble des TP est la branch `master`
 
 *******
 
