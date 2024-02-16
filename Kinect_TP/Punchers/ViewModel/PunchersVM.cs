@@ -60,9 +60,41 @@ namespace Punchers.ViewModel
             private set { SetProperty(ref boxerImagePath, value); }
         }
 
-        public Visibility StartTextVisibility { get; private set; }
-        public Visibility BarEnemyVisibility { get; private set; }
-        public Visibility BarBoxerVisibility { get; private set; }
+        private string textStart = "Boxe posture to start the game";
+        public string TextStart
+        {
+            get { return textStart; }
+            private set { SetProperty(ref textStart, value); }
+        }
+
+        public Visibility startTextVisibility;
+
+        public Visibility StartTextVisibility
+        {
+            get { return startTextVisibility; }
+            private set
+            {
+                SetProperty(ref startTextVisibility, value);
+            }
+        }
+        public Visibility enemyVisibility;
+        public Visibility EnemyVisibility
+        {
+            get { return enemyVisibility; }
+            private set
+            {
+                SetProperty(ref enemyVisibility, value);
+            }
+        }
+        public Visibility boxerVisibility;
+        public Visibility BoxerVisibility
+        {
+            get { return boxerVisibility; }
+            private set
+            {
+                SetProperty(ref boxerVisibility, value);
+            }
+        }
 
 
         public PunchersVM() {
@@ -82,8 +114,8 @@ namespace Punchers.ViewModel
             GestureManager.GestureRecognized += GestureManager_GestureReco;
 
             StartTextVisibility = Visibility.Visible;
-            BarEnemyVisibility = Visibility.Hidden;
-            BarBoxerVisibility = Visibility.Hidden;
+            EnemyVisibility = Visibility.Collapsed;
+            BoxerVisibility = Visibility.Collapsed;
         }
 
         private void StartAcqueringFrames()
@@ -96,38 +128,28 @@ namespace Punchers.ViewModel
             GestureManager.StopAcquiringFrame();
         }
 
-        private async Task<string> ReadAGesture(int ReadTimeInSeconds)
+        private void UpdateLifeStatus()
         {
-            string gestureRead = "";
-
-            // load all 
-            GestureManager.AddGestures(this.GestureFactory);
-
-            // subscirbe to the OnGestureRecognized event 
-            foreach (var gesture in GestureManager.KnownGestures)
+            if (EnemyLife <= 0)
             {
-                gesture.GestureRecognized += (sender, args) =>
-                {
-                    // If new gesture read, replace th gesture name
-                    if (gestureRead != args.GestureName)
-                    {
-                        gestureRead = args.GestureName;
-                    }
-                };
+                TextStart = "Vous avez gagné ! Boxe posture pour rejouer";
+                StartTextVisibility = Visibility.Visible;
+                EnemyVisibility = Visibility.Collapsed;
+                BoxerVisibility = Visibility.Collapsed;
+                boxerLife = 100;
+                enemyLife = 100;
+
             }
-
-            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
-            await Task.Delay(ReadTimeInSeconds * 5000);
-
-            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
-            foreach (var gesture in GestureManager.KnownGestures)
+            else if (BoxerLife <= 0)
             {
-                gesture.GestureRecognized -= (sender, args) => { };
+                TextStart = "L'adversaire a gagné ! Boxe posture pour rejouer";
+                StartTextVisibility = Visibility.Visible;
+                EnemyVisibility = Visibility.Collapsed;
+                BoxerVisibility = Visibility.Collapsed;
+                boxerLife = 100;
+                enemyLife = 100;
             }
-
-            return gestureRead;
         }
-
 
         private void EnemyAttack_Tick(object sender, EventArgs e)
         {
@@ -136,7 +158,7 @@ namespace Punchers.ViewModel
             EnemyImagePath = enemyImagePaths[index];
 
             // Vérifier si l'image du boxeur est "boxer_block"
-            if (BoxerImagePath.Contains("boxer-block"))
+            if (BoxerImagePath.Contains("boxer-block") || boxerVisibility == Visibility.Collapsed)
             {
                 // Ne déduire aucun point de vie du boxeur
             }
@@ -150,34 +172,49 @@ namespace Punchers.ViewModel
             }
 
             // Réinitialiser l'image de l'adversaire après un certain délai
-            Task.Delay(500).ContinueWith(_ => {
+            Task.Delay(800).ContinueWith(_ => {
                 EnemyImagePath = "/images/enemy-stand.png";
+                UpdateLifeStatus();
             });
         }
 
-        private void Attack()
+        private void BoxerAttack_Tick()
         {
             // Changer l'image du boxeur pour l'attaque
             BoxerImagePath = "/images/boxer-right-punch.png";
 
             // Vérifier si l'image de l'adversaire est "enemy-block"
-            if (EnemyImagePath.Contains("enemy-block"))
+            if (EnemyImagePath.Contains("enemy-block") || enemyVisibility == Visibility.Collapsed)
             {
                 // Ne déduire aucun point de vie de l'adversaire
             }
             else
             {
                 // Si l'image de l'adversaire est un coup de poing, déduire des points de vie de l'adversaire
-                if (EnemyImagePath.Contains("enemy-punch"))
+                if (BoxerImagePath.Contains("boxer-right-punch") && !EnemyImagePath.Contains("enemy-stand"))
                 {
                     EnemyLife -= 25;
                 }
             }
 
             // Réinitialiser l'image du boxeur après un certain délai
-            Task.Delay(500).ContinueWith(_ =>
+            Task.Delay(800).ContinueWith(_ =>
             {
                 BoxerImagePath = "/images/boxer-stand.png";
+                UpdateLifeStatus();
+            });
+        }
+
+        private void Block_Tick()
+        {
+            // Changer l'image du boxeur pour l'attaque
+            BoxerImagePath = "/images/boxer-block.png";
+
+            // Réinitialiser l'image du boxeur après un certain délai
+            Task.Delay(800).ContinueWith(_ =>
+            {
+                BoxerImagePath = "/images/boxer-stand.png";
+                UpdateLifeStatus();
             });
         }
 
@@ -188,10 +225,16 @@ namespace Punchers.ViewModel
             {
                 case "BoxePosture":
                     // Mettre à jour la visibilité du texte
-                    StartTextVisibility = Visibility.Hidden;
+                    StartTextVisibility = Visibility.Collapsed;
+                    EnemyVisibility = Visibility.Visible;
+                    BoxerVisibility = Visibility.Visible;
                     break;
+
                 case "Swipe Right Hand Gesture":
-                    Attack();
+                    BoxerAttack_Tick();
+                    break;
+                case "BlockPosture":
+                    Block_Tick();
                     break;
             }
         }
