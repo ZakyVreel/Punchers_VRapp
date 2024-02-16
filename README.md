@@ -14,8 +14,7 @@ Sommaire
  2. [Fonctionnalités](#fonctionnalites)
  2. [Instructions](#instructions)
  3. [Explication des solutions](#solutions)
- 4. [Architecture du projet](#architecture)
- 5. [Auteurs](#auteurs)
+ 4. [Auteurs](#auteurs)
 
 *******
 ## Présentation du projet 🎉
@@ -82,41 +81,6 @@ En ce qui concerne la structure de notre projet, nous avons plusieurs projet dan
 
 - `MyGestureBank` : une bibliothèque de classes qui contient toutes les postures et gestures codées et aussi les fabriques(factories) qui sont présentes également ici.
 
-*******
-
-## Architecture du projet ⚙️
-<div id='architecture'/> 
-
-```mermaid
-classDiagram
-direction LR
-class KinectStreamsFactory {
-    +ctor(kinect: KinectManager)
-    -streamFactory : Dictionary~KinectStreams, Func~KinectStream~~ 
-    +this[stream: KinectStreams] : KinectStream
-}
-
-class KinectStreams {
-    <<enum>>
-    None
-    Color
-    Depth
-    IR
-}
-
-class KinectStream {
-    
-}
-
-KinectStreamsFactory --> "1" KinectManager
-KinectStreamsFactory ..> KinectStreams
-KinectStreamsFactory ..> KinectStream
-KinectStream --> KinectManager
-KinectStream <|-- ColorImageStream
-KinectStream <|-- DepthImageStream
-KinectStream <|-- InfraredImageStream
-KinectStream <|-- BodyStream
-```
 *******
 
 
