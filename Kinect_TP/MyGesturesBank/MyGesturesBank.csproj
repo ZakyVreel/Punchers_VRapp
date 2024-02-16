@@ -50,7 +50,6 @@
     <Compile Include="PostureHandUpLeft.cs" />
     <Compile Include="PostureHandUpRight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PunchPosture.cs" />
     <Compile Include="RightPunchGesture.cs" />
     <Compile Include="SwipeRightHand.cs" />
   </ItemGroup>
