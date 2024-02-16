@@ -8,13 +8,25 @@ using System.Threading.Tasks;
 
 namespace MyGesturesBank
 {
+
+    /// <summary>
+    /// Représente la posture de blocage.
+    /// </summary>
     public class BlocPosture : Posture
     {
+
+        /// <summary>
+        /// Initialise une nouvelle instance de la classe BlocPosture.
+        /// </summary>
         public BlocPosture()
         {
             GestureName = "BlocPosture";
         }
 
+
+        /// <summary>
+        /// Vérifie si la posture de blocage est détectée.
+        /// </summary>
         protected override bool TestPosture(Body body)
         {
             // Obtenir les positions des joints nécessaires

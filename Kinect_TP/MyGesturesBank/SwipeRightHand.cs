@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 
 namespace MyGesturesBank
 {
+    /// <summary>
+    /// Représente la gestuelle de balayage vers la droite avec la main.
+    /// </summary>
     public class SwipeRightHandGesture : Gesture
     {
         private CameraSpacePoint previousRightHandPosition;
 
+
+        /// <summary>
+        /// Initialise une nouvelle instance de la classe SwipeRightHandGesture.
+        /// </summary>
         public SwipeRightHandGesture()
         {
             MinNbOfFrames = 10;
@@ -21,7 +28,9 @@ namespace MyGesturesBank
         }
 
 
-
+        /// <summary>
+        /// Vérifie les conditions initiales pour reconnaître le geste.
+        /// </summary>
         protected override bool TestInitialConditions(Body body)
         {
             CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;
@@ -41,6 +50,9 @@ namespace MyGesturesBank
             return isRightHandBetweenHeadAndHip && isRightHandForwardEnough && isMovingLeft;
         }
 
+        /// <summary>
+        /// Vérifie la posture de la main pendant le geste.
+        /// </summary>
         protected override bool TestPosture(Body body)
         {
             // Obtenir les positions des joints nécessaires
@@ -54,6 +66,10 @@ namespace MyGesturesBank
             return isHandBetweenHeadAndHip;
         }
 
+
+        /// <summary>
+        /// Vérifie si le geste est en cours d'exécution.
+        /// </summary>
         protected override bool TestRunningGesture(Body body)
         {
             CameraSpacePoint currentRightHandPosition = body.Joints[JointType.HandRight].Position;
@@ -67,6 +83,10 @@ namespace MyGesturesBank
             return isMovingLeft;
         }
 
+
+        /// <summary>
+        /// Vérifie les conditions de fin du geste.
+        /// </summary>
         protected override bool TestEndConditions(Body body)
         {
             CameraSpacePoint rightHandPosition = body.Joints[JointType.HandRight].Position;

@@ -8,12 +8,23 @@ using System.Threading.Tasks;
 
 namespace MyGesturesBank
 {
+    /// <summary>
+    /// Représente la posture boxe.
+    /// </summary>
     public class BoxePosture : Posture
     {
+
+        /// <summary>
+        /// Initialise une nouvelle instance de la classe BoxePosture.
+        /// </summary>
         public BoxePosture()
         {
             GestureName = "BoxePosture";
         }
+
+        /// <summary>
+        /// Vérifie si la posture de boxe est détectée.
+        /// </summary>
         protected override bool TestPosture(Body body)
         {
             // Obtenir les positions des joints de la main et l'épaule droite, la main et l'épaule gauche
@@ -46,11 +57,9 @@ namespace MyGesturesBank
             bool handLeftInToleranceRange = leftHandPosition.Y >= minLeftY && leftHandPosition.Y <= maxLeftY;
 
             // Vérifier si la main droite est suffisamment proche de l'épaule droite en termes de coordonnée X
-            // bool handRightInXRange = Math.Abs(rightHandPosition.X - rightShoulderPosition.X) <= toleranceMargin;
             bool handRightInXRange = rightHandPosition.X >= minRightX && rightHandPosition.X <= maxRightX;
 
             // Vérifier si la main droite est suffisamment proche de l'épaule droite en termes de coordonnée X
-            // bool handLeftInXRange = Math.Abs(leftHandPosition.X - leftShoulderPosition.X) <= toleranceMargin;
             bool handLeftInXRange = leftHandPosition.X >= minLeftX && leftHandPosition.X <= maxLeftX;
 
             // Retourner true uniquement si la main droite est dans la plage autour de l'épaule droite et suffisamment proche en termes de coordonnée X

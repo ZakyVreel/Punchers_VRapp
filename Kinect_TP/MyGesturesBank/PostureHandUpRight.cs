@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyGesturesBank
 {
-
+    //Cette posture marche, mais n'est pas utilisé.
     public class PostureHandUpRight : Posture
     {
         
