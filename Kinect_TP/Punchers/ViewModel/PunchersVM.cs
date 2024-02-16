@@ -18,6 +18,9 @@ namespace Punchers.ViewModel
     public class PunchersVM : ObservableObject
     {
         public KinectManager KinectManager { get; private set; }
+
+        public IGestureFactory GestureFactory { get; set; }
+
         public BoxingGestureFactory BoxingGestureFactory { get; private set; }
 
         private readonly DispatcherTimer enemyChangeTimer = new DispatcherTimer();
@@ -42,6 +45,7 @@ namespace Punchers.ViewModel
         public ICommand StopAcqueringFramesCommand { get; private set; }
 
 
+
         private string enemyImagePath = "/images/enemy-stand.png";
         public string EnemyImagePath
         {
@@ -57,10 +61,15 @@ namespace Punchers.ViewModel
         }
 
         public Visibility StartTextVisibility { get; private set; }
+        public Visibility BarEnemyVisibility { get; private set; }
+        public Visibility BarBoxerVisibility { get; private set; }
+
 
         public PunchersVM() {
             KinectManager = new KinectManager();
             BoxingGestureFactory = new BoxingGestureFactory();
+
+            this.GestureFactory = BoxingGestureFactory;
 
             GestureManager.AddGestures(BoxingGestureFactory);
             StartAcqueringFramesCommand = new RelayCommand(StartAcqueringFrames);
@@ -73,7 +82,8 @@ namespace Punchers.ViewModel
             GestureManager.GestureRecognized += GestureManager_GestureReco;
 
             StartTextVisibility = Visibility.Visible;
-
+            BarEnemyVisibility = Visibility.Hidden;
+            BarBoxerVisibility = Visibility.Hidden;
         }
 
         private void StartAcqueringFrames()
@@ -85,6 +95,39 @@ namespace Punchers.ViewModel
         {
             GestureManager.StopAcquiringFrame();
         }
+
+        private async Task<string> ReadAGesture(int ReadTimeInSeconds)
+        {
+            string gestureRead = "";
+
+            // load all 
+            GestureManager.AddGestures(this.GestureFactory);
+
+            // subscirbe to the OnGestureRecognized event 
+            foreach (var gesture in GestureManager.KnownGestures)
+            {
+                gesture.GestureRecognized += (sender, args) =>
+                {
+                    // If new gesture read, replace th gesture name
+                    if (gestureRead != args.GestureName)
+                    {
+                        gestureRead = args.GestureName;
+                    }
+                };
+            }
+
+            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
+            await Task.Delay(ReadTimeInSeconds * 5000);
+
+            GestureManager.StartAcquiringFrames(GestureManager.KinectManager);
+            foreach (var gesture in GestureManager.KnownGestures)
+            {
+                gesture.GestureRecognized -= (sender, args) => { };
+            }
+
+            return gestureRead;
+        }
+
 
         private void EnemyAttack_Tick(object sender, EventArgs e)
         {
@@ -112,6 +155,32 @@ namespace Punchers.ViewModel
             });
         }
 
+        private void Attack()
+        {
+            // Changer l'image du boxeur pour l'attaque
+            BoxerImagePath = "/images/boxer-right-punch.png";
+
+            // Vérifier si l'image de l'adversaire est "enemy-block"
+            if (EnemyImagePath.Contains("enemy-block"))
+            {
+                // Ne déduire aucun point de vie de l'adversaire
+            }
+            else
+            {
+                // Si l'image de l'adversaire est un coup de poing, déduire des points de vie de l'adversaire
+                if (EnemyImagePath.Contains("enemy-punch"))
+                {
+                    EnemyLife -= 25;
+                }
+            }
+
+            // Réinitialiser l'image du boxeur après un certain délai
+            Task.Delay(500).ContinueWith(_ =>
+            {
+                BoxerImagePath = "/images/boxer-stand.png";
+            });
+        }
+
 
         private void GestureManager_GestureReco(object sender, GestureRecognizedEventArgs e)
         {
@@ -120,6 +189,9 @@ namespace Punchers.ViewModel
                 case "BoxePosture":
                     // Mettre à jour la visibilité du texte
                     StartTextVisibility = Visibility.Hidden;
+                    break;
+                case "Swipe Right Hand Gesture":
+                    Attack();
                     break;
             }
         }
