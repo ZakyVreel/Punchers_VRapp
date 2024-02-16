@@ -15,18 +15,31 @@ using System.Windows.Threading;
 
 namespace Punchers.ViewModel
 {
+
+    /// <summary>
+    /// ViewModel pour la fenêtre principale du jeu Punchers.
+    /// </summary>
     public class PunchersVM : ObservableObject
     {
+        // Gestionnaire Kinect
         public KinectManager KinectManager { get; private set; }
 
+        // Fabrique de gestes
         public IGestureFactory GestureFactory { get; set; }
 
+        // Fabrique de gestes pour la boxe
         public BoxingGestureFactory BoxingGestureFactory { get; private set; }
 
+        // Minuterie pour le changement d'image de l'adversaire
         private readonly DispatcherTimer enemyChangeTimer = new DispatcherTimer();
+
+        // Générateur de nombres aléatoires
         private readonly Random random = new Random();
+
+        // Chemins des images de l'adversaire
         private readonly string[] enemyImagePaths = { "/images/enemy-punch1.png", "/images/enemy-punch2.png", "/images/enemy-block.png" };
 
+        // Points de vie de l'adversaire
         private int enemyLife = 100;
         public int EnemyLife
         {
@@ -34,6 +47,8 @@ namespace Punchers.ViewModel
             set { SetProperty(ref enemyLife, value); }
         }
 
+
+        // Points de vie du boxeur
         private int boxerLife = 100;
         public int BoxerLife
         {
@@ -41,11 +56,12 @@ namespace Punchers.ViewModel
             set { SetProperty(ref boxerLife, value); }
         }
 
+        // Commandes pour démarrer et arrêter l'acquisition de trames Kinect
         public ICommand StartAcqueringFramesCommand { get; private set; }
         public ICommand StopAcqueringFramesCommand { get; private set; }
 
 
-
+        // Chemin de l'image de l'adversaire
         private string enemyImagePath = "/images/enemy-stand.png";
         public string EnemyImagePath
         {
@@ -53,6 +69,7 @@ namespace Punchers.ViewModel
             private set { SetProperty(ref enemyImagePath, value); }
         }
 
+        // Chemin de l'image du boxeur
         private string boxerImagePath = "/images/boxer-stand.png";
         public string BoxerImagePath
         {
@@ -60,6 +77,7 @@ namespace Punchers.ViewModel
             private set { SetProperty(ref boxerImagePath, value); }
         }
 
+        // Texte de démarrage du jeu
         private string textStart = "Boxe posture to start the game";
         public string TextStart
         {
@@ -67,8 +85,8 @@ namespace Punchers.ViewModel
             private set { SetProperty(ref textStart, value); }
         }
 
+        // Visibilité du texte de démarrage
         public Visibility startTextVisibility;
-
         public Visibility StartTextVisibility
         {
             get { return startTextVisibility; }
@@ -77,6 +95,8 @@ namespace Punchers.ViewModel
                 SetProperty(ref startTextVisibility, value);
             }
         }
+
+        // Visibilité de l'adversaire
         public Visibility enemyVisibility;
         public Visibility EnemyVisibility
         {
@@ -86,6 +106,8 @@ namespace Punchers.ViewModel
                 SetProperty(ref enemyVisibility, value);
             }
         }
+
+        // Visibilité du boxeur
         public Visibility boxerVisibility;
         public Visibility BoxerVisibility
         {
@@ -96,43 +118,52 @@ namespace Punchers.ViewModel
             }
         }
 
-
+        // Constructeur de la classe
         public PunchersVM() {
+
+            // Initialisation du gestionnaire Kinect
             KinectManager = new KinectManager();
             BoxingGestureFactory = new BoxingGestureFactory();
-
             this.GestureFactory = BoxingGestureFactory;
-
             GestureManager.AddGestures(BoxingGestureFactory);
+
+            // Initialisation des commandes
             StartAcqueringFramesCommand = new RelayCommand(StartAcqueringFrames);
             StopAcqueringFramesCommand = new RelayCommand(StopAcqueringFrames);
 
+            // Configuration de la minuterie pour le changement d'image de l'adversaire
             enemyChangeTimer.Interval = TimeSpan.FromSeconds(4); // Changer toutes les 4 secondes
             enemyChangeTimer.Tick += EnemyAttack_Tick;
             enemyChangeTimer.Start();
 
             GestureManager.GestureRecognized += GestureManager_GestureReco;
 
+            // Configuration des visibilités par défaut
             StartTextVisibility = Visibility.Visible;
             EnemyVisibility = Visibility.Collapsed;
             BoxerVisibility = Visibility.Collapsed;
         }
 
+        // Méthode pour démarrer l'acquisition de trames Kinect
         private void StartAcqueringFrames()
         {
             GestureManager.StartAcquiringFrames(KinectManager);
         }
 
+        // Méthode pour arrêter l'acquisition de trames Kinect
         private void StopAcqueringFrames()
         {
             GestureManager.StopAcquiringFrame();
         }
 
+        // Méthode pour mettre à jour l'état de vie des joueurs
         private void UpdateLifeStatus()
         {
             if (EnemyLife <= 0)
             {
                 TextStart = "Vous avez gagné ! Boxe posture pour rejouer";
+
+                //On resete le jeu
                 StartTextVisibility = Visibility.Visible;
                 EnemyVisibility = Visibility.Collapsed;
                 BoxerVisibility = Visibility.Collapsed;
@@ -143,6 +174,8 @@ namespace Punchers.ViewModel
             else if (BoxerLife <= 0)
             {
                 TextStart = "L'adversaire a gagné ! Boxe posture pour rejouer";
+
+                //On resete le jeu
                 StartTextVisibility = Visibility.Visible;
                 EnemyVisibility = Visibility.Collapsed;
                 BoxerVisibility = Visibility.Collapsed;
@@ -151,6 +184,7 @@ namespace Punchers.ViewModel
             }
         }
 
+        // Méthode pour gérer l'attaque de l'adversaire
         private void EnemyAttack_Tick(object sender, EventArgs e)
         {
             // Changer le chemin de l'image de l'adversaire aléatoirement
@@ -178,6 +212,7 @@ namespace Punchers.ViewModel
             });
         }
 
+        // Méthode pour gérer l'attaque du boxeur
         private void BoxerAttack_Tick()
         {
             // Changer l'image du boxeur pour l'attaque
@@ -197,7 +232,7 @@ namespace Punchers.ViewModel
                 }
             }
 
-            // Réinitialiser l'image du boxeur après un certain délai
+            // Réinitialiser l'image du boxeur après un certain délai et mettre à jour l'état de vie
             Task.Delay(800).ContinueWith(_ =>
             {
                 BoxerImagePath = "/images/boxer-stand.png";
@@ -219,21 +254,24 @@ namespace Punchers.ViewModel
         }
 
 
+        // Gestionnaire d'événement pour la reconnaissance des gestes
         private void GestureManager_GestureReco(object sender, GestureRecognizedEventArgs e)
         {
             switch (e.GestureName)
             {
                 case "BoxePosture":
-                    // Mettre à jour la visibilité du texte
+                    // Mettre à jour la visibilité du texte et des joueurs
                     StartTextVisibility = Visibility.Collapsed;
                     EnemyVisibility = Visibility.Visible;
                     BoxerVisibility = Visibility.Visible;
                     break;
 
                 case "Swipe Right Hand Gesture":
+                    // Gérer l'attaque du boxeur
                     BoxerAttack_Tick();
                     break;
                 case "BlocPosture":
+                    // Gérer la posture de blocage du boxeur
                     Block_Tick();
                     break;
             }
