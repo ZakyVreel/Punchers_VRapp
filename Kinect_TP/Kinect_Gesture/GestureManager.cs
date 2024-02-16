@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Kinect_Gesture
 {
+
+    /// <summary>
+    /// Gestionnaire des gestes Kinect.
+    /// </summary>
     public static class GestureManager
     {
 
@@ -41,8 +45,7 @@ namespace Kinect_Gesture
             {
                 AddGesture(gesture);
             }
-            //var gestures = factory.CreateGestures().ToList();
-            //KnownGestures.AddRange(gestures);
+
         }
 
         public static void AddGestures(params BaseGesture[] baseGestures)
@@ -51,7 +54,6 @@ namespace Kinect_Gesture
             {
                 AddGesture(gesture);
             }
-            //KnownGestures.AddRange(baseGestures);
         }
 
         public static void AddGesture(BaseGesture baseGesture)
