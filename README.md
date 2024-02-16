@@ -30,7 +30,7 @@ Sommaire
 <div id='fonctionnalites'/> 
 
 - **Combat en temps réel** : Affrontez un adversaire virtuel en utilisant vos mouvements de boxe.
-- **Utilisation du Kinect** : La technologie Kinect détecte vos mouvements et les intègre dans le jeu pour une expérience immersive.
+- **Utilisation du Kinect** : La technologie Kinect détecte vos mouvements et les intègrent dans le jeu pour une expérience immersive.
 - **Gestion de la vie** : Surveillez votre barre de vie pour éviter d'être mis K.O. par votre adversaire.
 - **Animation** : Des animations reproduisent vos mouvements de boxe à l'écran.
 
@@ -40,7 +40,7 @@ Sommaire
 <div id='instructions'/> 
 
 Instructions
-1. **Démarrez le jeu** en exécutant l'application, c'est à dire le projet "Punchers". Verifiez bien que votre Kinect est connecté.
+1. **Démarrez le jeu** en exécutant l'application, c'est-à-dire le projet "Punchers". Verifiez bien que votre Kinect est connecté.
 2. **Positionnez-vous** devant le capteur Kinect pour que vos mouvements soient détectés.
 3. **Adoptez** la posture de boxe pour commencer le jeu.
 4. Utilisez vos mouvements de bras pour attaquer l'adversaire ou bloquer son attaque.
