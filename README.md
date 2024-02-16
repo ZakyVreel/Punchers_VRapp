@@ -55,7 +55,7 @@ Instructions
 
 **Geste pour attaquer** ("SwitchHandRight"). Avec votre main droite vous allez faire un geste vers votre gauche :
 
-Voici l'exemple :
+Voici l'exemple : \
 ![](./images/Boxe8.png)
 <div align= center>
 ↓
@@ -65,7 +65,7 @@ Voici l'exemple :
 
 **Posture pour bloquer** ("BlocPosture"). Vous allez faire une croix avec vos deux bras.
 
-Voici l'exemple :
+Voici l'exemple : \
 ![](./images/Boxe2.png)
 
 
