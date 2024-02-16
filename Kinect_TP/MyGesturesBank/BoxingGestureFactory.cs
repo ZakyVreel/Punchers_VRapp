@@ -9,11 +9,8 @@ namespace Kinect_Gesture
 {
     public class BoxingGestureFactory : IGestureFactory
     {
-        /// <summary>
-        /// Crée tout les baseGesture
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<BaseGesture> CreateGestures()
+        private List<BaseGesture> gestures;
+        public BoxingGestureFactory()
         {
             //Postures
             PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
@@ -23,11 +20,25 @@ namespace Kinect_Gesture
             //Gesture
             SwipeRightHandGesture swipeRightHandGesture = new SwipeRightHandGesture();
 
-            BaseGesture[] gestures = new BaseGesture[2];
-            gestures[0] = swipeRightHandGesture;
-            gestures[1] = boxePosture;
+            gestures = new List<BaseGesture>
+            {
+                swipeRightHandGesture,
+                boxePosture
+            };
+        }
 
-            return gestures;
+        public BaseGesture this[string gestureName]
+        {
+            get { return this.gestures.FirstOrDefault(g => g.GestureName == gestureName); }
+        }
+
+        /// <summary>
+        /// Crée tout les baseGesture
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<BaseGesture> CreateGestures()
+        {
+            return this.gestures;
         }
     }
 }

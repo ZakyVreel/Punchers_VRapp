@@ -10,5 +10,6 @@ namespace Kinect_Gesture
     public interface IGestureFactory
     {
         IEnumerable<BaseGesture> CreateGestures();
+        BaseGesture this[string gestureName] { get; }
     }
 }
