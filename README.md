@@ -6,7 +6,6 @@
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
 
 
-
 *******
 
 Sommaire 
@@ -17,6 +16,13 @@ Sommaire
  4. [Auteurs](#auteurs)
 
 *******
+
+## Branch 🚨
+
+La branch a été noté pour l'ensemble des TP est la branch `master`
+
+*******
+
 ## Présentation du projet 🎉
 <div id='presentation'/> 
 
@@ -39,7 +45,6 @@ Sommaire
 ## Instructions 📃
 <div id='instructions'/> 
 
-Instructions
 1. **Démarrez le jeu** en exécutant l'application, c'est à dire le projet "Punchers". Verifiez bien que votre Kinect est connecté.
 2. **Positionnez-vous** devant le capteur Kinect pour que vos mouvements soient détectés.
 3. **Adoptez** la posture de boxe pour commencer le jeu.
@@ -88,7 +93,7 @@ En ce qui concerne la structure de notre projet, nous avons plusieurs projet dan
 <div id='auteurs'/> 
 
 BUT Informatique - Clermont Ferrand - 2023-2024
-Étudiants 3ème année - Filière Mobile :
+Étudiants 3ème année - Filière Mobile PM2:
    
 `DA COSTA CUNHA Bruno` et `SAOULA Zakariya`
 
