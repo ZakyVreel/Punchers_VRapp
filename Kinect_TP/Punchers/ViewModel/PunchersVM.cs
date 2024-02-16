@@ -233,7 +233,7 @@ namespace Punchers.ViewModel
                 case "Swipe Right Hand Gesture":
                     BoxerAttack_Tick();
                     break;
-                case "BlockPosture":
+                case "BlocPosture":
                     Block_Tick();
                     break;
             }

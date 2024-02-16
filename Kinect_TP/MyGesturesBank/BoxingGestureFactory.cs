@@ -16,6 +16,8 @@ namespace Kinect_Gesture
             PostureHandUpRight postureHandUpRight = new PostureHandUpRight();
             PostureHandUpLeft postureHandUpLeft = new PostureHandUpLeft();
             BoxePosture boxePosture = new BoxePosture();
+            BlocPosture blocPosture = new BlocPosture();
+            PunchPosture punchPosture = new PunchPosture();
 
             //Gesture
             SwipeRightHandGesture swipeRightHandGesture = new SwipeRightHandGesture();
@@ -23,7 +25,9 @@ namespace Kinect_Gesture
             gestures = new List<BaseGesture>
             {
                 swipeRightHandGesture,
-                boxePosture
+                boxePosture,
+                blocPosture,
+                punchPosture,
             };
         }
 
